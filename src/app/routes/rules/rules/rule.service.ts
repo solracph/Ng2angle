@@ -11,25 +11,35 @@ export
     public contractList: Constraint[] =  [
         {id: 1, name: 'Contracts-1', type: "Contract"},
         {id: 2, name: 'Contracts-2', type: "Contract"},
-        {id: 3, name: 'Contracts-3', type: "Contract"}
+        {id: 3, name: 'Contracts-3', type: "Contract"},
+        {id: 3, name: 'Contracts-4', type: "Contract"},
     ];
 
     public pbpList: Constraint[] = [
-        {id: 1, name: 'PBP-1', type: "PBP"},
-        {id: 2, name: 'PBP-2', type: "PBP"},
-        {id: 3, name: 'PBP-3', type: "PBP"}
+        {id: 1, name: 'H2001', type: "PBP"},
+        {id: 2, name: 'H2003', type: "PBP"},
+        {id: 3, name: 'H2002', type: "PBP"}
     ]
 
     public taxIdList: Constraint[] = [
-        {id: 1, name: '1524', type: "Tax Id"},
-        {id: 2, name: '5484', type: "Tax Id"},
-        {id: 3, name: '6547', type: "Tax Id"}
+        {id: 1, name: '152454', type: "Tax Id"},
+        {id: 2, name: '548444', type: "Tax Id"},
+        {id: 3, name: '456845', type: "Tax Id"},
+        {id: 4, name: '456344', type: "Tax Id"},
+        {id: 5, name: '654745', type: "Tax Id"},
+        {id: 6, name: '654647', type: "Tax Id"},
+        {id: 7, name: '656134', type: "Tax Id"},
+        {id: 8, name: '987538', type: "Tax Id"},
+        {id: 9, name: '553845', type: "Tax Id"},
+        {id: 10, name: '77897', type: "Tax Id"},
+        {id: 11, name: '77897', type: "Tax Id"}
     ]
 
     public measureList: Constraint[] = [
-        {id: 1, name: 'measures-1', type: "Measure"},
-        {id: 2, name: 'measures-2', type: "Measure"},
-        {id: 3, name: 'measures-3', type: "Measure"}
+        {id: 1, name: 'MA', type: "Measure"},
+        {id: 2, name: 'MRP', type: "Measure"},
+        {id: 3, name: 'ART', type: "Measure"},
+        {id: 4, name: 'OMW', type: "Measure"}
     ]
 
     public applicationList: Application[] = [

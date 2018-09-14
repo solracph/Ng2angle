@@ -4,18 +4,10 @@ import { Rule } from './models/rule.model';
 import { Constraint } from './models/constraint.model';
 import { Application } from './models/application.model';
 import { RuleService } from './rule.service';
-import { MatPaginator,MatTableDataSource } from '@angular/material';
+import { MatPaginator,MatTableDataSource, MatStepper, MatTable } from '@angular/material';
 import { SelectionModel} from '@angular/cdk/collections';
 
 import * as _ from 'lodash';
-
-export interface PeriodicElement {
-    name: string;
-    position: number;
-    weight: number;
-    symbol: string;
-  }
-  
 
 @Component({
     selector: 'app-rules',
@@ -34,18 +26,22 @@ export class RulesComponent implements OnInit {
     @ViewChild('pbpPaginator') pbpPaginator: MatPaginator;
     @ViewChild('taxIdPaginator') taxIdPaginator: MatPaginator;
     @ViewChild('measurePaginator') measurePaginator: MatPaginator;
-    @ViewChild('applicationPaginator') applicationPaginator: MatPaginator;
+    @ViewChild('applicationPaginator') applicationPaginator: MatPaginator; 
+    @ViewChild('rulePaginator') rulePaginator: MatPaginator;
+    @ViewChild('stepper') stepper: MatStepper;
+    
 
     public isLinear = false;
     public newRuleFormGroup: FormGroup;
     public ruleList: Array<Rule> = []; 
-    public pageSizeOptions: Array<number> = [1 ,5, 10];
+    public pageSizeOptions: Array<number> = [5 ,10, 20];
+    public ruleId ;
 
     public contractDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Constraint>(this.ruleService.contractList);
     public contractSelection: SelectionModel<Constraint>= new SelectionModel<Constraint>(true, []);
 
     public pbpDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Constraint>(this.ruleService.pbpList);
-    public pbpSelection: SelectionModel<Constraint>= new SelectionModel<Constraint>(true, []);
+    public pbpSelection: SelectionModel<Constraint> = new SelectionModel<Constraint>(true, []);
 
     public taxIdDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Constraint>(this.ruleService.taxIdList);
     public taxIdSelection: SelectionModel<Constraint> = new SelectionModel<Constraint>(true, []);
@@ -56,6 +52,9 @@ export class RulesComponent implements OnInit {
     public applicationDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Constraint>(this.ruleService.applicationList);
     public applicationSelection: SelectionModel<Constraint> = new SelectionModel<Constraint>(true, []);
 
+    public ruleDataSource: MatTableDataSource<Rule> = new MatTableDataSource<Rule>([]);
+   
+
     ngOnInit() {
 
         this.contractDataSource.paginator = this.contractPaginator;
@@ -63,20 +62,21 @@ export class RulesComponent implements OnInit {
         this.taxIdDataSource.paginator = this.taxIdPaginator;
         this.measureDataSource.paginator = this.measurePaginator;
         this.applicationDataSource.paginator = this.applicationPaginator;
+        this.ruleDataSource.paginator = this.rulePaginator;
 
         this.newRuleFormGroup = this._formBuilder.group({
             descriptionCtrl:  ['']
         });
     }
 
-    isAllSelected(selection) {
+    isAllSelected(selection,dataSource) {
         const numSelected = selection.selected.length;
-        const numRows = this.taxIdDataSource.data.length;
+        const numRows = dataSource.data.length;
         return numSelected === numRows;
     }
 
     masterToggle(selection,dataSource) {
-        this.isAllSelected(selection) ?
+        this.isAllSelected(selection,dataSource) ?
             selection.clear() :
             dataSource.data.forEach(row => selection.select(row));
     }
@@ -85,55 +85,60 @@ export class RulesComponent implements OnInit {
         dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-     saveRule(){
-        /*if(!this.newRuleFormGroup.invalid){
-            console.log(_.find(this.applicationList,['id',this.newRuleFormGroup.value.applicationCtrl]));
+    stepperReset() {
+        this.stepper.reset();
+    }
 
-            var newRule = {
-                id: 1,
-                code: _.find(this.applicationList,['id',this.newRuleFormGroup.value.applicationCtrl]).code,
-                constraints: [
-                    {
-                        type: _.find(this.contractList,['id',this.newRuleFormGroup.value.contractCtrl]).type,
-                        id:  this.newRuleFormGroup.value.contractCtrl,
-                        name: _.find(this.contractList,['id',this.newRuleFormGroup.value.contractCtrl]).name
-                    },
-                    {
-                        type: _.find(this.pbpList,['id',this.newRuleFormGroup.value.pbpCtrl]).type,
-                        id:  this.newRuleFormGroup.value.pbpCtrl,
-                        name: _.find(this.pbpList,['id',this.newRuleFormGroup.value.pbpCtrl]).name
-                    },
-                    {
-                        type: _.find(this.taxIdList,['id',this.newRuleFormGroup.value.taxIdCtrl]).type,
-                        id:  this.newRuleFormGroup.value.taxIdCtrl,
-                        name: _.find(this.taxIdList,['id',this.newRuleFormGroup.value.taxIdCtrl]).name
-                    /,
-                    {
-                        type: _.find(this.measureList,['id',this.newRuleFormGroup.value.measureCtrl]).type,
-                        id:  this.newRuleFormGroup.value.contractCtrl,
-                        name: _.find(this.measureList,['id',this.newRuleFormGroup.value.measureCtrl]).name
-                    },
-                    {
-                        type: _.find(this.applicationList,['id',this.newRuleFormGroup.value.applicationCtrl]).type,
-                        id:  this.newRuleFormGroup.value.contractCtrl,
-                        name: _.find(this.applicationList,['id',this.newRuleFormGroup.value.applicationCtrl]).name
-                    }
-                ],
-                description: this.newRuleFormGroup.value.descriptionCtrl,
-            }
-            
-            var ruleExist = false;
+    selectionReset() {
+        this.contractSelection = new SelectionModel<Constraint>(true, []);
+        this.taxIdSelection = new SelectionModel<Constraint>(true, []);
+        this.pbpSelection = new SelectionModel<Constraint>(true, []);
+        this.measureSelection = new SelectionModel<Constraint>(true, []);
+        this.applicationSelection = new SelectionModel<Constraint>(true, []);
+    }
 
-            this.ruleList.forEach(rule => {
-                ruleExist = _.isEqual(rule,newRule);
-            });
+    stepperAndSelectionReset() {
+        this.stepperReset();
+        this.selectionReset();
+    }
 
-            if(!ruleExist){
-                this.ruleList.push(newRule)
-            }
-            
+    removeRow(index,dataSource) {
+        _.pullAt(dataSource.data,[index]);
+        this.ruleDataSource.data = dataSource.data;
+    }
+
+    saveRule(){
+        this.ruleId = Math.random();
+        var newRule = {
+            id: this.ruleId,
+            code: `R-${this.ruleId}`,
+            constraints: [],
+            description: this.newRuleFormGroup.value.descriptionCtrl,
+        }
+
+        newRule.constraints.push(this.contractSelection.selected);
+        newRule.constraints.push(this.taxIdSelection.selected);
+        newRule.constraints.push(this.pbpSelection.selected);
+        newRule.constraints.push(this.measureSelection.selected);
+        newRule.constraints.push(this.applicationSelection.selected);
+
+        this.ruleList.push(newRule);
+
+        this.ruleDataSource.data = [...this.ruleDataSource.data,newRule];
+
+        this.stepperAndSelectionReset();
+
+        /* var ruleExist = false;
+
+        this.ruleList.forEach(rule => {
+            ruleExist = _.isEqual(rule,newRule);
+        });
+
+        if(!ruleExist){
+            this.ruleList.push(newRule)
         }*/
 
-     }
+
+    }
 
 }
