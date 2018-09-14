@@ -1,0 +1,27 @@
+:host /deep/ .mat-step-header .mat-step-icon[ng-reflect-ng-switch="edit"]{
+    background-color: #4caf50;
+}
+
+:host /deep/ .mat-step-header .mat-step-icon[ng-reflect-ng-switch="number"]{
+    background-color: #2196F3;
+}
+
+.md-card .md-card-heading{
+    padding: 20px 22px;
+}
+
+.mat-form-field .mat-form-field-infix{
+    width: 500px !important;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+.example-half-width {
+    width: 50%;
+}
+
+table, mat-paginator {
+    width: 50%;
+  }
