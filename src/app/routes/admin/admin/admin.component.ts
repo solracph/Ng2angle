@@ -92,49 +92,53 @@ export class AdminComponent implements OnInit {
 
         this.setUsersAvailableRules(this.userSelection);
         this.setUserCurrentRules(this.userSelection);
+
+        this.ruleSelection = new SelectionModel<Rule>(true, []);
+
     }
 
     setUsersAvailableRules(selection)
     {
-        var allRule = _.find(selection.selected, function(o) { return o.rules.length == 0 });
-
-        if(allRule == undefined)
+        if(this.appState.ruleList != undefined)
         {
-            if(selection.selected.length == 1){
-                selection.selected.forEach(selection => {
-                    if(selection.rules != undefined) 
-                    selection.rules.forEach(rule => {
-                        _.pullAll(this.ruleDataSource.data,[rule]);
-                        this.ruleDataSource.data = this.ruleDataSource.data;
-                    });
-                }); 
-            }
-            
-            if(selection.selected.length > 1){
-                var data = [];
-                selection.selected.forEach(selection => {
-                    if(selection.rules != undefined) 
-                    {
-                        this.ruleDataSource.data = [...this.appState.ruleList];
-                        data = _.union(data,_.pullAll(this.ruleDataSource.data,selection.rules));
-                    }
-                }); 
-                this.ruleDataSource.data = data;
+            var allRule = _.find(selection.selected, function(o) { return o.rules.length == 0 });
+    
+            if(allRule == undefined)
+            {
+                if(selection.selected.length == 1){
+                    selection.selected.forEach(user => {
+                        if(user.rules != undefined) 
+                        user.rules.forEach(rule => {
+                            _.pullAll(this.ruleDataSource.data,[rule]);
+                            this.ruleDataSource.data = this.ruleDataSource.data;
+                        });
+                    }); 
+                }
                 
-            }
-
-            if(selection.selected.length == 0){
+                if(selection.selected.length > 1){
+                    var data = [];
+                    selection.selected.forEach(user => {
+                        if(user.rules != undefined) 
+                        {
+                            this.ruleDataSource.data = [...this.appState.ruleList];
+                            data = _.union(data,_.pullAll(this.ruleDataSource.data,user.rules));
+                        }
+                    }); 
+                    this.ruleDataSource.data = data;
+                    
+                }
+    
+                if(selection.selected.length == 0){
+                    this.ruleDataSource.data = [...this.appState.ruleList];
+                }
+                
+            } else{
                 this.ruleDataSource.data = [...this.appState.ruleList];
             }
-            
-        } else{
-            this.ruleDataSource.data = [...this.appState.ruleList];
         }
-
     }
 
     setUserCurrentRules(selection) {
-        debugger;
         var data = [];
         selection.selected.forEach(selection => {
             if(selection.rules != undefined) 
@@ -146,4 +150,26 @@ export class AdminComponent implements OnInit {
         this.assignedRulesDataSource.data = data;
     }
 
+    removeRUles(selection)
+    {
+        selection.selected.forEach(selection => {
+            if(selection != undefined) 
+            {
+                _.pullAll(this.assignedRulesDataSource.data,[selection]);
+                this.assignedRulesDataSource.data = this.assignedRulesDataSource.data;
+
+                this.userSelection.selected.forEach(user => {
+                    if(user.rules != undefined) 
+                    {
+                        _.pullAll(user.rules,[selection]);
+                        user.rules = user.rules;
+                    }
+                }); 
+            }
+        }); 
+
+        this.setUsersAvailableRules(this.userSelection);
+
+        this.assignedRulesSelection = new SelectionModel<Rule>(true, []);
+    }
 }

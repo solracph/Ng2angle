@@ -35,7 +35,7 @@
                                 </ng-container>
                             
                                 <tr mat-header-row *matHeaderRowDef="['select','name']"></tr>
-                                <tr mat-row *matRowDef="let row; columns: ['select','name'];"></tr>
+                                <tr mat-row *matRowDef="let row; columns: ['select','name'];" (click)="userSelectionToggle(userSelection,row)"></tr>
                         </table>
                         <mat-paginator #userPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
                 </div>
@@ -94,7 +94,7 @@
                                                 </td>
                                             </ng-container>
                                             <tr mat-header-row *matHeaderRowDef="['select','code']"></tr>
-                                            <tr mat-row *matRowDef="let row; columns: ['select','code'];"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: ['select','code'];" (click)="ruleSelection.toggle(row)"></tr>
                                     </table>
                                     <mat-paginator #rulePaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
                                     <button mat-button class="btn btn-primary mb-2" (click)="addRulesToUsers()">Add Rule(s)</button>
@@ -152,10 +152,10 @@
                                                 </td>
                                             </ng-container>
                                             <tr mat-header-row *matHeaderRowDef="['select','code']"></tr>
-                                            <tr mat-row *matRowDef="let row; columns: ['select','code'];"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: ['select','code'];" (click)="assignedRulesSelection.toggle(row)"></tr>
                                     </table>
                                     <mat-paginator #assignedRulesPaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
-                                    <button mat-button class="btn btn-primary mb-2" (click)="addRulesToUsers()">Remove Rule(s)</button>
+                                    <button mat-button class="btn btn-danger mb-2" (click)="removeRUles(assignedRulesSelection)">Remove Rule(s)</button>
                         </div>
                     </div>
                 </div>
