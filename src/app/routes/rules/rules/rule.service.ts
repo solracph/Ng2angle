@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Constraint } from './models/constraint.model';
-import { Application } from './models/application.model';
+import { Constraint } from '../../../common/model/constraint.model';
+import { Application } from '../../../common/model/application.model';
 
 @Injectable()
 export 

@@ -1,0 +1,64 @@
+:host /deep/ .mat-step-header .mat-step-icon[ng-reflect-ng-switch="edit"]{
+    background-color: #4caf50;
+    //display: none;
+}
+
+:host /deep/ .mat-step-header .mat-step-icon[ng-reflect-ng-switch="number"]{
+    background-color: #2196F3;
+   // display: none;
+}
+
+:host /deep/ .mat-chip.mat-standard-chip.mat-chip-selected.mat-primary{
+    background-color: #2196F3;
+}
+
+:host /deep/ .mat-step-header .mat-step-icon-not-touched{
+    display: none;
+}
+.md-card .md-card-heading{
+    padding: 20px 22px;
+}
+
+.mat-form-field .mat-form-field-infix{
+    width: 500px !important;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+.example-half-width {
+    width: 50%;
+}
+
+table, mat-paginator {
+    width: 50%;
+}
+
+.container-lg{
+    max-width:none;
+}
+
+.mat-expansion-panel{
+    box-shadow:none;
+}
+
+.mat-rule-table{
+    width: 100%;
+}
+:host /deep/ .mat-chip-list-wrapper{
+    margin: 0px;
+}
+
+.btn-danger{
+    background-color : #E53935;
+}
+
+.mat-button-container{
+    padding: 10px;
+    padding-top: 20px;
+}
+
+.mat-column-select{
+    width: 100px;
+}

@@ -13,6 +13,8 @@ import { LayoutModule } from './layout/layout.module';
 import { SharedModule } from './shared/shared.module';
 import { RoutesModule } from './routes/routes.module';
 
+import { MaterialTableHelper } from './common/service/material-table-helper.service'
+
 
 // https://github.com/ocombe/ng2-translate/issues/218
 export function createTranslateLoader(http: HttpClient) {
@@ -38,7 +40,10 @@ export function createTranslateLoader(http: HttpClient) {
             }
         })
     ],
-    providers: [AppState],
+    providers: [
+        AppState,
+        MaterialTableHelper
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

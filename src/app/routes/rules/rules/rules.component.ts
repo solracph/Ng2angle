@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, NgModel } from '@angular/forms';
-import { Rule } from './models/rule.model';
-import { Constraint } from './models/constraint.model';
-import { Application } from './models/application.model';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Rule } from '../../../common/model/rule.model';
+import { Constraint } from '../../../common/model/constraint.model';
+import { Application } from '../../../common/model/application.model';
 import { RuleService } from './rule.service';
-import { MatPaginator,MatTableDataSource, MatStepper, MatTable } from '@angular/material';
+import { MatPaginator,MatTableDataSource, MatStepper } from '@angular/material';
 import { SelectionModel} from '@angular/cdk/collections';
 import { AppState } from '../../../app.state';
+import { MaterialTableHelper } from '../../../common/service/material-table-helper.service'
 
 import * as _ from 'lodash';
 
@@ -18,7 +19,7 @@ import * as _ from 'lodash';
 export class RulesComponent implements OnInit {
 
     
-    constructor(private _formBuilder: FormBuilder,private ruleService: RuleService, public appState: AppState)
+    constructor(private _formBuilder: FormBuilder,private ruleService: RuleService, public appState: AppState, private materialTableHelper: MaterialTableHelper)
     {
         
     }
@@ -73,19 +74,15 @@ export class RulesComponent implements OnInit {
     }
 
     isAllSelected(selection,dataSource) {
-        const numSelected = selection.selected.length;
-        const numRows = dataSource.data.length;
-        return numSelected === numRows;
+        return this.materialTableHelper.isAllSelected(selection,dataSource)
     }
 
     masterToggle(selection,dataSource) {
-        this.isAllSelected(selection,dataSource) ?
-            selection.clear() :
-            dataSource.data.forEach(row => selection.select(row));
+        this.materialTableHelper.masterToggle(selection,dataSource);
     }
 
     applyFilter(filterValue: string, dataSource) {
-        dataSource.filter = filterValue.trim().toLowerCase();
+        this.materialTableHelper.applyFilter(filterValue,dataSource);
     }
 
     stepperReset() {
@@ -108,6 +105,7 @@ export class RulesComponent implements OnInit {
     removeRow(index,dataSource) {
         _.pullAt(dataSource.data,[index]);
         this.ruleDataSource.data = dataSource.data;
+        this.appState.ruleList = dataSource.data;
     }
 
     updateRuleDataSource(newRules: Rule){
@@ -132,7 +130,6 @@ export class RulesComponent implements OnInit {
         this.ruleList.push(newRule);
         this.appState.ruleList = this.ruleList;
         this.updateRuleDataSource(newRule)
-        //this.ruleDataSource.data = [...this.ruleDataSource.data,newRule];
 
         this.stepperAndSelectionReset();
 
