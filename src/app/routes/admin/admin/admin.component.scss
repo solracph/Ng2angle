@@ -62,3 +62,6 @@ table, mat-paginator {
 .mat-column-select{
     width: 100px;
 }
+table[_ngcontent-c8], mat-paginator[_ngcontent-c8]{
+         width: 100% !important; 
+}

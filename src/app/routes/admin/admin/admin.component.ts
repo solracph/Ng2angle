@@ -4,6 +4,8 @@ import { MaterialTableHelper } from '../../../common/service/material-table-help
 import { MatPaginator,MatTableDataSource } from '@angular/material';
 import { SelectionModel} from '@angular/cdk/collections';
 import { Rule } from '../../../common/model/rule.model'
+import { User } from '../../../common/model/user.model'
+import { AdminService } from './admin.service';
 import * as _ from 'lodash';
 
 @Component({
@@ -14,25 +16,35 @@ import * as _ from 'lodash';
 export class AdminComponent implements OnInit {
     
     public ruleList: Array<Rule>;
+    public pageSizeOptions: Array<number> = [5 ,10, 20];
 
     @ViewChild('rulePaginator') rulePaginator: MatPaginator;
+    @ViewChild('userPaginator') userPaginator: MatPaginator;
 
     public ruleDataSource: MatTableDataSource<Rule> = new MatTableDataSource<Rule>([]);
     public ruleSelection: SelectionModel<Rule> = new SelectionModel<Rule>(true, []);
+
+    public asignetRuleDataSource: MatTableDataSource<Rule> = new MatTableDataSource<Rule>([]);
+
+    public userDataSource: MatTableDataSource<User> = new MatTableDataSource<User>(this.adminService.getUsers());
+    public userSelection: SelectionModel<User> = new SelectionModel<User>(true, []);
+
     
-    constructor(public appState: AppState,private materialTableHelper: MaterialTableHelper)
+    constructor(public appState: AppState,private materialTableHelper: MaterialTableHelper,private adminService: AdminService)
     {
         
     }
     
 
     ngOnInit() {
+
         this.ruleList = this.appState.ruleList == undefined ? [] : this.appState.ruleList; 
         this.ruleList.forEach(rule => {
             this.updateRuleDataSource(rule);
         });
 
-        console.log(this.appState.ruleList);
+        this.ruleDataSource.paginator = this.rulePaginator;
+        this.userDataSource.paginator = this.userPaginator;
     }
 
     updateRuleDataSource(newRules: Rule){
@@ -43,6 +55,16 @@ export class AdminComponent implements OnInit {
         return this.materialTableHelper.isAllSelected(selection,dataSource)
     }
 
+    userMasterToggle(selection,dataSource) {
+        this.materialTableHelper.masterToggle(selection,dataSource);
+        this.setUsersAvailableRules(selection);
+    }
+
+    userSelectionToggle(selection,row){
+        selection.toggle(row);
+        this.setUsersAvailableRules(selection);
+    }
+
     masterToggle(selection,dataSource) {
         this.materialTableHelper.masterToggle(selection,dataSource);
     }
@@ -51,6 +73,60 @@ export class AdminComponent implements OnInit {
         this.materialTableHelper.applyFilter(filterValue,dataSource);
     }
 
-   
+    addRulesToUsers(){
+        this.userSelection.selected.forEach(user => {
+            this.ruleSelection.selected.forEach(rule => {
+                user.rules = [];
+            });
+        });
+
+        this.userSelection.selected.forEach(user => {
+            this.ruleSelection.selected.forEach(rule => {
+                user.rules.push(rule);
+            });
+        });
+
+        this.setUsersAvailableRules(this.userSelection)
+    }
+
+    setUsersAvailableRules(selection)
+    {
+        var allRule = _.find(selection.selected, function(o) { console.log(o.rules); return o.rules.length == 0 });
+
+        if(allRule == undefined)
+        {
+            if(selection.selected.length == 1){
+                selection.selected.forEach(selection => {
+                    if(selection.rules != undefined) 
+                    selection.rules.forEach(rule => {
+                        _.pullAll(this.ruleDataSource.data,[rule]);
+                        this.ruleDataSource.data = this.ruleDataSource.data;
+                    });
+                }); 
+            }
+            
+            if(selection.selected.length > 1){
+                var data = [];
+                selection.selected.forEach(selection => {
+                    if(selection.rules != undefined) 
+                    {
+                        this.ruleDataSource.data = [...this.appState.ruleList];
+                        data = _.union(data,_.pullAll(this.ruleDataSource.data,selection.rules));
+                    }
+                }); 
+                this.ruleDataSource.data = data;
+                
+            }
+
+            if(selection.selected.length == 0){
+                this.ruleDataSource.data = [...this.appState.ruleList];
+            }
+            
+        } else{
+            this.ruleDataSource.data = [...this.appState.ruleList];
+        }
+    }
+
+    setUserCurrentRules( ) {}
 
 }
