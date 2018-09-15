@@ -7,6 +7,7 @@ export const routes = [
         component: LayoutComponent,
         children: [
             { path: '', redirectTo: 'home', pathMatch: 'full' },
+            { path: 'admin', loadChildren: './admin/admin.module#AdminModule' },
             { path: 'rules', loadChildren: './rules/rules.module#RulesModule' },
             { path: 'home', loadChildren: './home/home.module#HomeModule' },
             { path: 'material', loadChildren: './material/material.module#MaterialModule' },

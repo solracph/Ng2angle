@@ -4,6 +4,9 @@ import { TranslatorService } from '../core/translator/translator.service';
 import { MenuService } from '../core/menu/menu.service';
 import { SharedModule } from '../shared/shared.module';
 
+import { RulesModule } from './rules/rules.module';
+import { AdminModule } from './admin/admin.module';
+
 
 import { menu } from './menu';
 import { routes } from './routes';
@@ -12,6 +15,8 @@ import { routes } from './routes';
     imports: [
         SharedModule,
         RouterModule.forRoot(routes),
+        RulesModule,
+        AdminModule
     ],
     declarations: [],
     exports: [

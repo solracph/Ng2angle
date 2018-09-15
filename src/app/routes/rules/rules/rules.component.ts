@@ -6,6 +6,7 @@ import { Application } from './models/application.model';
 import { RuleService } from './rule.service';
 import { MatPaginator,MatTableDataSource, MatStepper, MatTable } from '@angular/material';
 import { SelectionModel} from '@angular/cdk/collections';
+import { AppState } from '../../../app.state';
 
 import * as _ from 'lodash';
 
@@ -17,7 +18,7 @@ import * as _ from 'lodash';
 export class RulesComponent implements OnInit {
 
     
-    constructor(private _formBuilder: FormBuilder,private ruleService: RuleService)
+    constructor(private _formBuilder: FormBuilder,private ruleService: RuleService, public appState: AppState)
     {
         
     }
@@ -29,11 +30,9 @@ export class RulesComponent implements OnInit {
     @ViewChild('applicationPaginator') applicationPaginator: MatPaginator; 
     @ViewChild('rulePaginator') rulePaginator: MatPaginator;
     @ViewChild('stepper') stepper: MatStepper;
-    
 
-    public isLinear = false;
     public newRuleFormGroup: FormGroup;
-    public ruleList: Array<Rule> = []; 
+    public ruleList: Array<Rule>;
     public pageSizeOptions: Array<number> = [5 ,10, 20];
     public ruleId ;
 
@@ -49,14 +48,18 @@ export class RulesComponent implements OnInit {
     public measureDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Constraint>(this.ruleService.measureList);
     public measureSelection: SelectionModel<Constraint> = new SelectionModel<Constraint>(true, []);
 
-    public applicationDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Constraint>(this.ruleService.applicationList);
-    public applicationSelection: SelectionModel<Constraint> = new SelectionModel<Constraint>(true, []);
+    public applicationDataSource: MatTableDataSource<Application> = new MatTableDataSource<Application>(this.ruleService.applicationList);
+    public applicationSelection: SelectionModel<Application> = new SelectionModel<Application>(true, []);
 
     public ruleDataSource: MatTableDataSource<Rule> = new MatTableDataSource<Rule>([]);
    
 
     ngOnInit() {
-
+        this.ruleList = this.appState.ruleList == undefined ? [] : this.appState.ruleList; 
+        this.ruleList.forEach(rule => {
+            this.updateRuleDataSource(rule);
+        });
+        
         this.contractDataSource.paginator = this.contractPaginator;
         this.pbpDataSource.paginator = this.pbpPaginator;
         this.taxIdDataSource.paginator = this.taxIdPaginator;
@@ -94,7 +97,7 @@ export class RulesComponent implements OnInit {
         this.taxIdSelection = new SelectionModel<Constraint>(true, []);
         this.pbpSelection = new SelectionModel<Constraint>(true, []);
         this.measureSelection = new SelectionModel<Constraint>(true, []);
-        this.applicationSelection = new SelectionModel<Constraint>(true, []);
+        this.applicationSelection = new SelectionModel<Application>(true, []);
     }
 
     stepperAndSelectionReset() {
@@ -105,6 +108,10 @@ export class RulesComponent implements OnInit {
     removeRow(index,dataSource) {
         _.pullAt(dataSource.data,[index]);
         this.ruleDataSource.data = dataSource.data;
+    }
+
+    updateRuleDataSource(newRules: Rule){
+        this.ruleDataSource.data = [...this.ruleDataSource.data,newRules];
     }
 
     saveRule(){
@@ -123,8 +130,9 @@ export class RulesComponent implements OnInit {
         newRule.constraints.push(this.applicationSelection.selected);
 
         this.ruleList.push(newRule);
-
-        this.ruleDataSource.data = [...this.ruleDataSource.data,newRule];
+        this.appState.ruleList = this.ruleList;
+        this.updateRuleDataSource(newRule)
+        //this.ruleDataSource.data = [...this.ruleDataSource.data,newRule];
 
         this.stepperAndSelectionReset();
 

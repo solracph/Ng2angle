@@ -5,11 +5,18 @@ const Home = {
     icon: 'icon-home'
 };
 
+const Admin = {
+    text: 'Admin',
+    link: '/admin',
+    icon: 'icon-settings'
+};
+
 const Rules = {
     text: 'Rules',
     link: '/rules',
     icon: 'icon-link'
 };
+
 
 
 const Material = {
@@ -63,6 +70,7 @@ const headingMain = {
 export const menu = [
     headingMain,
     Home,
+    Admin,
     Rules,
     Material
 ];

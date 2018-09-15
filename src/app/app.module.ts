@@ -6,13 +6,13 @@ import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-transla
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppComponent } from './app.component';
+import { AppState } from './app.state';
 
 import { CoreModule } from './core/core.module';
 import { LayoutModule } from './layout/layout.module';
 import { SharedModule } from './shared/shared.module';
 import { RoutesModule } from './routes/routes.module';
 
-import { RulesModule } from './routes/rules/rules.module';
 
 // https://github.com/ocombe/ng2-translate/issues/218
 export function createTranslateLoader(http: HttpClient) {
@@ -30,7 +30,6 @@ export function createTranslateLoader(http: HttpClient) {
         LayoutModule,
         SharedModule.forRoot(),
         RoutesModule,
-        RulesModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -39,7 +38,7 @@ export function createTranslateLoader(http: HttpClient) {
             }
         })
     ],
-    providers: [],
+    providers: [AppState],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
