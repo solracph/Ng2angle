@@ -20,11 +20,13 @@ export class AdminComponent implements OnInit {
 
     @ViewChild('rulePaginator') rulePaginator: MatPaginator;
     @ViewChild('userPaginator') userPaginator: MatPaginator;
+    @ViewChild('assignedRulesPaginator') assignedRulesPaginator: MatPaginator;
 
     public ruleDataSource: MatTableDataSource<Rule> = new MatTableDataSource<Rule>([]);
     public ruleSelection: SelectionModel<Rule> = new SelectionModel<Rule>(true, []);
 
-    public asignetRuleDataSource: MatTableDataSource<Rule> = new MatTableDataSource<Rule>([]);
+    public assignedRulesDataSource: MatTableDataSource<Rule> = new MatTableDataSource<Rule>([]);
+    public assignedRulesSelection: SelectionModel<Rule> = new SelectionModel<Rule>(true, []);
 
     public userDataSource: MatTableDataSource<User> = new MatTableDataSource<User>(this.adminService.getUsers());
     public userSelection: SelectionModel<User> = new SelectionModel<User>(true, []);
@@ -34,7 +36,6 @@ export class AdminComponent implements OnInit {
     {
         
     }
-    
 
     ngOnInit() {
 
@@ -45,6 +46,7 @@ export class AdminComponent implements OnInit {
 
         this.ruleDataSource.paginator = this.rulePaginator;
         this.userDataSource.paginator = this.userPaginator;
+        this.assignedRulesDataSource.paginator = this.assignedRulesPaginator;
     }
 
     updateRuleDataSource(newRules: Rule){
@@ -58,11 +60,13 @@ export class AdminComponent implements OnInit {
     userMasterToggle(selection,dataSource) {
         this.materialTableHelper.masterToggle(selection,dataSource);
         this.setUsersAvailableRules(selection);
+        this.setUserCurrentRules(selection)
     }
 
     userSelectionToggle(selection,row){
         selection.toggle(row);
         this.setUsersAvailableRules(selection);
+        this.setUserCurrentRules(selection);
     }
 
     masterToggle(selection,dataSource) {
@@ -86,12 +90,13 @@ export class AdminComponent implements OnInit {
             });
         });
 
-        this.setUsersAvailableRules(this.userSelection)
+        this.setUsersAvailableRules(this.userSelection);
+        this.setUserCurrentRules(this.userSelection);
     }
 
     setUsersAvailableRules(selection)
     {
-        var allRule = _.find(selection.selected, function(o) { console.log(o.rules); return o.rules.length == 0 });
+        var allRule = _.find(selection.selected, function(o) { return o.rules.length == 0 });
 
         if(allRule == undefined)
         {
@@ -125,8 +130,20 @@ export class AdminComponent implements OnInit {
         } else{
             this.ruleDataSource.data = [...this.appState.ruleList];
         }
+
     }
 
-    setUserCurrentRules( ) {}
+    setUserCurrentRules(selection) {
+        debugger;
+        var data = [];
+        selection.selected.forEach(selection => {
+            if(selection.rules != undefined) 
+            {
+                data = _.union(data,selection.rules);
+            }
+        }); 
+
+        this.assignedRulesDataSource.data = data;
+    }
 
 }

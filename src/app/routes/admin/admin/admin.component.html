@@ -22,7 +22,7 @@
                                         <td mat-cell *matCellDef="let row">
                                         <mat-checkbox 
                                             (click)="$event.stopPropagation()"
-                                            (change)="userSelectionToggle(userSelection,row)"
+                                            (change)="$event ? userSelectionToggle(userSelection,row) : null"
                                             [checked]="userSelection.isSelected(row)">
                                         </mat-checkbox>
                                         </td>
@@ -37,7 +37,7 @@
                                 <tr mat-header-row *matHeaderRowDef="['select','name']"></tr>
                                 <tr mat-row *matRowDef="let row; columns: ['select','name'];"></tr>
                         </table>
-                        <mat-paginator #userPaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+                        <mat-paginator #userPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
                 </div>
             </div>
         </div>
@@ -97,7 +97,7 @@
                                             <tr mat-row *matRowDef="let row; columns: ['select','code'];"></tr>
                                     </table>
                                     <mat-paginator #rulePaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
-                                    <button mat-button class="btn btn-primary mb-2" (click)="addRulesToUsers()">Add Rules</button>
+                                    <button mat-button class="btn btn-primary mb-2" (click)="addRulesToUsers()">Add Rule(s)</button>
                                 </div>
                             </div>
                     </div>
@@ -109,7 +109,53 @@
                             <div class="md-card-title">Assigned rule(s)</div>
                         </div>
                         <div class="md-card-body">
-                           
+                                <mat-form-field>
+                                        <input matInput (keyup)="applyFilter($event.target.value,assignedRulesDataSource)" placeholder="Filter">
+                                    </mat-form-field>
+                                    <table mat-table [dataSource]="assignedRulesDataSource" class="mat-rule-table">
+                                            <ng-container matColumnDef="select">
+                                                    <th mat-header-cell *matHeaderCellDef >
+                                                    <mat-checkbox 
+                                                        (change)="$event ? masterToggle(assignedRulesSelection,assignedRulesDataSource) : null"
+                                                        [checked]="assignedRulesSelection.hasValue() && isAllSelected(assignedRulesSelection,assignedRulesDataSource)"
+                                                        [indeterminate]="assignedRulesSelection.hasValue() && !isAllSelected(assignedRulesSelection,assignedRulesDataSource)">
+                                                    </mat-checkbox>
+                                                    </th>
+                                                    <td mat-cell *matCellDef="let row">
+                                                    <mat-checkbox 
+                                                        (click)="$event.stopPropagation()"
+                                                        (change)="$event ? assignedRulesSelection.toggle(row) : null"
+                                                        [checked]="assignedRulesSelection.isSelected(row)">
+                                                    </mat-checkbox>
+                                                    </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="code">
+                                                <th mat-header-cell *matHeaderCellDef> Rules </th>
+                                                <td mat-cell *matCellDef="let rule;let i = index">
+                                                    <mat-accordion>
+                                                        <mat-expansion-panel class="mat-elevation-z0">
+                                                            <mat-expansion-panel-header>
+                                                            <mat-panel-title>
+                                                                {{rule.code}}
+                                                            </mat-panel-title>
+                                                            <mat-panel-description>
+                                                                {{rule.description}}
+                                                            </mat-panel-description>
+                                                            </mat-expansion-panel-header>
+                                                            <mat-chip-list  *ngFor="let constraint of rule.constraints">
+                                                                <mat-chip color="primary" selected  *ngFor="let cons of constraint">
+                                                                    <strong>{{cons.type}} </strong>: {{cons.name}}
+                                                                </mat-chip>
+                                                            </mat-chip-list>
+                                                        </mat-expansion-panel>
+                                                    </mat-accordion>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="['select','code']"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: ['select','code'];"></tr>
+                                    </table>
+                                    <mat-paginator #assignedRulesPaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+                                    <button mat-button class="btn btn-primary mb-2" (click)="addRulesToUsers()">Remove Rule(s)</button>
                         </div>
                     </div>
                 </div>
