@@ -78,15 +78,10 @@ export class AdminComponent implements OnInit {
     }
 
     addRulesToUsers(){
-        this.userSelection.selected.forEach(user => {
-            this.ruleSelection.selected.forEach(rule => {
-                user.rules = [];
-            });
-        });
 
         this.userSelection.selected.forEach(user => {
             this.ruleSelection.selected.forEach(rule => {
-                user.rules.push(rule);
+                user.rules = _.union(user.rules,[rule]);
             });
         });
 
@@ -105,17 +100,8 @@ export class AdminComponent implements OnInit {
     
             if(allRule == undefined)
             {
-                if(selection.selected.length == 1){
-                    selection.selected.forEach(user => {
-                        if(user.rules != undefined) 
-                        user.rules.forEach(rule => {
-                            _.pullAll(this.ruleDataSource.data,[rule]);
-                            this.ruleDataSource.data = this.ruleDataSource.data;
-                        });
-                    }); 
-                }
                 
-                if(selection.selected.length > 1){
+                if(selection.selected.length > 0){
                     var data = [];
                     selection.selected.forEach(user => {
                         if(user.rules != undefined) 
@@ -172,4 +158,6 @@ export class AdminComponent implements OnInit {
 
         this.assignedRulesSelection = new SelectionModel<Rule>(true, []);
     }
+
+    
 }

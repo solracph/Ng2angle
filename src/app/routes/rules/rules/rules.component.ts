@@ -35,7 +35,6 @@ export class RulesComponent implements OnInit {
     public newRuleFormGroup: FormGroup;
     public ruleList: Array<Rule>;
     public pageSizeOptions: Array<number> = [5 ,10, 20];
-    public ruleId ;
 
     public contractDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Constraint>(this.ruleService.contractList);
     public contractSelection: SelectionModel<Constraint>= new SelectionModel<Constraint>(true, []);
@@ -113,10 +112,10 @@ export class RulesComponent implements OnInit {
     }
 
     saveRule(){
-        this.ruleId = Math.random();
+        var ruleId = Math.random();
         var newRule = {
-            id: this.ruleId,
-            code: `R-${this.ruleId}`,
+            id: ruleId,
+            code: `R-${ruleId}`,
             constraints: [],
             description: this.newRuleFormGroup.value.descriptionCtrl,
         }
@@ -132,18 +131,22 @@ export class RulesComponent implements OnInit {
         this.updateRuleDataSource(newRule)
 
         this.stepperAndSelectionReset();
+    }
 
-        /* var ruleExist = false;
+    cloneRule(i: number,rule: Rule){
+        
+        var ruleId = Math.random();
 
-        this.ruleList.forEach(rule => {
-            ruleExist = _.isEqual(rule,newRule);
-        });
+        var _rule = {
+            id: ruleId,
+            code: `R-${ruleId}`,
+            constraints: rule.constraints,
+            description: rule.description
+        }
 
-        if(!ruleExist){
-            this.ruleList.push(newRule)
-        }*/
-
-
+        this.updateRuleDataSource(_rule);
+        this.ruleList.push(_rule);
+        this.appState.ruleList = this.ruleList;
     }
 
 }

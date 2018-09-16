@@ -264,8 +264,11 @@
                                 </mat-chip-list>
 
                                 <div class="mat-button-container">
+                                    <button mat-button class="mat-button"  (click)="cloneRule(i,rule)">
+                                        Clone
+                                    </button>
                                     <button mat-button class="btn btn-danger mb-2"  (click)="removeRow(i,ruleDataSource)">
-                                          Delete
+                                        Delete
                                     </button>
                                 </div>
                             </mat-expansion-panel>
