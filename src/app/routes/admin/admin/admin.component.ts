@@ -41,6 +41,7 @@ export class AdminComponent implements OnInit {
     ngOnInit() {
 
         this.ruleList = this.appState.ruleList == undefined ? [] : this.appState.ruleList; 
+
         this.ruleList.forEach(rule => {
             this.updateRuleDataSource(rule);
         });
@@ -92,18 +93,18 @@ export class AdminComponent implements OnInit {
         this.ruleSelection = new SelectionModel<Rule>(true, []);
     }
 
-    setUsersAvailableRules(selection)
+    setUsersAvailableRules(users)
     {
         if(this.appState.ruleList != undefined)
         {
-            var allRule = _.find(selection.selected, function(o) { return o.rules.length == 0 });
+            var haveAllRulesAvailable  = _.find(users.selected, function(o) { return o.rules.length == 0 });
     
-            if(allRule == undefined)
+            if(haveAllRulesAvailable == undefined)
             {
                 
-                if(selection.selected.length > 0){
+                if(users.selected.length > 0){
                     var data = [];
-                    selection.selected.forEach(user => {
+                    users.selected.forEach(user => {
                         if(user.rules != undefined) 
                         {
                             this.ruleDataSource.data = [...this.appState.ruleList];
@@ -112,9 +113,7 @@ export class AdminComponent implements OnInit {
                     }); 
                     this.ruleDataSource.data = data;
                     
-                }
-    
-                if(selection.selected.length == 0){
+                } else {
                     this.ruleDataSource.data = [...this.appState.ruleList];
                 }
                 
@@ -124,9 +123,9 @@ export class AdminComponent implements OnInit {
         }
     }
 
-    setUserCurrentRules(selection) {
+    setUserCurrentRules(users) {
         var data = [];
-        selection.selected.forEach(user => {
+        users.selected.forEach(user => {
             if(user.rules != undefined) 
             {
                 data = _.union(data,user.rules);
@@ -142,12 +141,11 @@ export class AdminComponent implements OnInit {
         }
     }
 
-    showAllUserList(e){
-        console.log(e)
+    /*showAllUserList(e){
         e.target.parentElement.classList.toggle("overflow-visible");
         e.target.parentElement.classList.toggle("overflow-hidden");
         e.target.html = "close"
-    }
+    }*/
 
     removeRUles(selection)
     {
