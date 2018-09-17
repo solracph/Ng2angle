@@ -16,6 +16,7 @@ import * as _ from 'lodash';
 export class AdminComponent implements OnInit {
     
     public ruleList: Array<Rule>;
+    public usersNameToAssignedRules;
     public pageSizeOptions: Array<number> = [5 ,10, 20];
 
     @ViewChild('rulePaginator') rulePaginator: MatPaginator;
@@ -25,8 +26,8 @@ export class AdminComponent implements OnInit {
     public ruleDataSource: MatTableDataSource<Rule> = new MatTableDataSource<Rule>([]);
     public ruleSelection: SelectionModel<Rule> = new SelectionModel<Rule>(true, []);
 
-    public assignedRulesDataSource: MatTableDataSource<Rule> = new MatTableDataSource<Rule>([]);
-    public assignedRulesSelection: SelectionModel<Rule> = new SelectionModel<Rule>(true, []);
+    public assignedRulesDataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
+    public assignedRulesSelection: SelectionModel<any> = new SelectionModel<any>(true, []);
 
     public userDataSource: MatTableDataSource<User> = new MatTableDataSource<User>(this.adminService.getUsers());
     public userSelection: SelectionModel<User> = new SelectionModel<User>(true, []);
@@ -89,7 +90,6 @@ export class AdminComponent implements OnInit {
         this.setUserCurrentRules(this.userSelection);
 
         this.ruleSelection = new SelectionModel<Rule>(true, []);
-
     }
 
     setUsersAvailableRules(selection)
@@ -118,7 +118,7 @@ export class AdminComponent implements OnInit {
                     this.ruleDataSource.data = [...this.appState.ruleList];
                 }
                 
-            } else{
+            } else {
                 this.ruleDataSource.data = [...this.appState.ruleList];
             }
         }
@@ -126,14 +126,27 @@ export class AdminComponent implements OnInit {
 
     setUserCurrentRules(selection) {
         var data = [];
-        selection.selected.forEach(selection => {
-            if(selection.rules != undefined) 
+        selection.selected.forEach(user => {
+            if(user.rules != undefined) 
             {
-                data = _.union(data,selection.rules);
+                data = _.union(data,user.rules);
             }
         }); 
-
         this.assignedRulesDataSource.data = data;
+    }
+
+    setUsersNameToAssignedRules(userRules,rulId,user){
+        if(_.find(userRules,['id',rulId]) != undefined )
+        {
+            return user.name
+        }
+    }
+
+    showAllUserList(e){
+        console.log(e)
+        e.target.parentElement.classList.toggle("overflow-visible");
+        e.target.parentElement.classList.toggle("overflow-hidden");
+        e.target.html = "close"
     }
 
     removeRUles(selection)

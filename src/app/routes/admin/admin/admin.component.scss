@@ -65,3 +65,48 @@ table, mat-paginator {
 table[_ngcontent-c8], mat-paginator[_ngcontent-c8]{
          width: 100% !important; 
 }
+
+.constraint-type-col{
+    min-width: 100px;
+}
+
+.row{
+    width: 100%;
+}
+
+:host /deep/ .overflow-visible{
+    overflow: visible !important;
+    height: auto !important;
+}
+
+
+:host /deep/ .overflow-hidden {
+    overflow: hidden;
+};
+
+:host /deep/ .see-more{
+    display: none;
+    float: right;
+    font-size: 25px;
+}
+
+:host /deep/.users-assigned-to-rules-container:hover .see-more{
+    display: block;
+}
+
+:host /deep/ .users-assigned-to-rules-container{
+    height: auto;
+    overflow: auto;
+    margin-bottom: 10px;
+    padding: 4px;
+    cursor: pointer;
+}
+
+:host /deep/ .users-assigned-to-rules-content {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+:host /deep/ .users-assigned-to-rules-content:empty{
+    display: none;
+}

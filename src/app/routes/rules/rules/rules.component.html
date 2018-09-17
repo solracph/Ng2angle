@@ -258,9 +258,20 @@
                                 </mat-panel-description>
                                 </mat-expansion-panel-header>
                                 <mat-chip-list  *ngFor="let constraint of rule.constraints">
-                                    <mat-chip color="primary" selected  *ngFor="let cons of constraint">
-                                        <strong>{{cons.type}} </strong>: {{cons.name}}
-                                    </mat-chip>
+                                    <div class="row">
+                                        <div class="col-lg-1">
+                                            <div>
+                                                <strong>{{constraint[0].type}}: </strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-11">
+                                            <div>
+                                                <mat-chip color="primary" selected  *ngFor="let cons of constraint">
+                                                    {{cons.name}}
+                                                </mat-chip>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </mat-chip-list>
 
                                 <div class="mat-button-container">

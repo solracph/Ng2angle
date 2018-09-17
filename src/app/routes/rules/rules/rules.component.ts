@@ -113,6 +113,7 @@ export class RulesComponent implements OnInit {
 
     saveRule(){
         var ruleId = Math.random();
+
         var newRule = {
             id: ruleId,
             code: `R-${ruleId}`,
@@ -120,16 +121,67 @@ export class RulesComponent implements OnInit {
             description: this.newRuleFormGroup.value.descriptionCtrl,
         }
 
-        newRule.constraints.push(this.contractSelection.selected);
-        newRule.constraints.push(this.taxIdSelection.selected);
-        newRule.constraints.push(this.pbpSelection.selected);
-        newRule.constraints.push(this.measureSelection.selected);
-        newRule.constraints.push(this.applicationSelection.selected);
+        if(this.contractSelection.selected.length > 0) {
+            if(this.contractSelection.selected.length == this.contractDataSource.data.length){
+                newRule.constraints.push([{
+                    type: "Contract",
+                    name: "All"
+                }])
+            } else {
+                newRule.constraints.push(this.contractSelection.selected);
+            }
+        }
+
+        if(this.taxIdSelection.selected.length > 0)
+        {
+            if(this.taxIdSelection.selected.length == this.taxIdDataSource.data.length) {
+                newRule.constraints.push([{
+                    type: "Tax Id",
+                    name: "All"
+                }])
+            } else {
+                newRule.constraints.push(this.taxIdSelection.selected);
+            }
+        }
+
+        if(this.pbpSelection.selected.length > 0){
+            if(this.pbpSelection.selected.length == this.pbpDataSource.data.length) {
+                newRule.constraints.push([{
+                    type: "PBP",
+                    name: "All"
+                }])
+            } else {
+                newRule.constraints.push(this.pbpSelection.selected);
+            }
+        }
+        
+        if(this.measureSelection.selected.length > 0){
+            if(this.measureSelection.selected.length == this.measureDataSource.data.length) {
+                newRule.constraints.push([{
+                    type: "Measure",
+                    name: "All"
+                }])
+            } else {
+                newRule.constraints.push(this.measureSelection.selected);
+            }
+        }
+
+        if(this.applicationSelection.selected.length > 0){
+            if(this.applicationSelection.selected.length == this.applicationDataSource.data.length) {
+                newRule.constraints.push([{
+                    type: "Application",
+                    name: "All"
+                }])
+            } else {
+                newRule.constraints.push(this.applicationSelection.selected);
+            }
+        }
+        
 
         this.ruleList.push(newRule);
         this.appState.ruleList = this.ruleList;
-        this.updateRuleDataSource(newRule)
 
+        this.updateRuleDataSource(newRule)
         this.stepperAndSelectionReset();
     }
 

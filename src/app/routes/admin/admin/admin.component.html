@@ -85,16 +85,27 @@
                                                             </mat-panel-description>
                                                             </mat-expansion-panel-header>
                                                             <mat-chip-list  *ngFor="let constraint of rule.constraints">
-                                                                <mat-chip color="primary" selected  *ngFor="let cons of constraint">
-                                                                    <strong>{{cons.type}} </strong>: {{cons.name}}
-                                                                </mat-chip>
+                                                                <div class="row">
+                                                                    <div class="col-lg-2">
+                                                                        <div>
+                                                                            <strong>{{constraint[0].type}}: </strong>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-10">
+                                                                        <div>
+                                                                            <mat-chip color="primary" selected  *ngFor="let cons of constraint">
+                                                                                {{cons.name}}
+                                                                            </mat-chip>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </mat-chip-list>
                                                         </mat-expansion-panel>
                                                     </mat-accordion>
                                                 </td>
                                             </ng-container>
                                             <tr mat-header-row *matHeaderRowDef="['select','code']"></tr>
-                                            <tr mat-row *matRowDef="let row; columns: ['select','code'];" (click)="ruleSelection.toggle(row)"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: ['select','code'];"></tr>
                                     </table>
                                     <mat-paginator #rulePaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
                                     <button mat-button class="btn btn-primary mb-2" (click)="addRulesToUsers()">Add Rule(s)</button>
@@ -143,16 +154,34 @@
                                                             </mat-panel-description>
                                                             </mat-expansion-panel-header>
                                                             <mat-chip-list  *ngFor="let constraint of rule.constraints">
-                                                                <mat-chip color="primary" selected  *ngFor="let cons of constraint">
-                                                                    <strong>{{cons.type}} </strong>: {{cons.name}}
-                                                                </mat-chip>
+                                                                <div class="row">
+                                                                    <div class="col-lg-2">
+                                                                        <div>
+                                                                            <strong>{{constraint[0].type}}: </strong>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-10">
+                                                                        <div>
+                                                                            <mat-chip color="primary" selected  *ngFor="let cons of constraint">
+                                                                                {{cons.name}}
+                                                                            </mat-chip>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </mat-chip-list>
+                                                            <div *ngIf="userSelection.selected.length > 1" class="users-assigned-to-rules-container overflow-hidden" >
+                                                                <!--<div class="see-more" (click)="showAllUserList($event)">...</div>-->
+                                                                <mat-chip disabled *ngFor="let user of userSelection.selected" class="users-assigned-to-rules-content">{{setUsersNameToAssignedRules(user.rules,rule.id,user)}}</mat-chip>
+                                                            </div>
                                                         </mat-expansion-panel>
                                                     </mat-accordion>
+                                                   
+                                                    
                                                 </td>
                                             </ng-container>
+                                            
                                             <tr mat-header-row *matHeaderRowDef="['select','code']"></tr>
-                                            <tr mat-row *matRowDef="let row; columns: ['select','code'];" (click)="assignedRulesSelection.toggle(row)"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: ['select','code'];"></tr>
                                     </table>
                                     <mat-paginator #assignedRulesPaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
                                     <button mat-button class="btn btn-danger mb-2" (click)="removeRUles(assignedRulesSelection)">Remove Rule(s)</button>
