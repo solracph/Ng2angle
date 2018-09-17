@@ -70,3 +70,16 @@ table, mat-paginator {
 .row{
     width: 100%;
 }
+
+table, :host /deep/ .mat-paginator-container{
+    border: solid 1px #e0e0e0;
+}
+
+:host /deep/ .mat-paginator-container{
+    margin-bottom: 10px;
+}
+
+:host /deep/ tr.mat-header-row{
+    background-color: #f8f8f8;
+}
+
