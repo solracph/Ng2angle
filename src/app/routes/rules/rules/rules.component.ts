@@ -170,6 +170,7 @@ export class RulesComponent implements OnInit {
             if(this.applicationSelection.selected.length == this.applicationDataSource.data.length) {
                 newRule.constraints.push([{
                     type: "Application",
+                    code: "AP-1",
                     name: "All"
                 }])
             } else {

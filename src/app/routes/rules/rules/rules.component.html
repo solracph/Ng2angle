@@ -260,8 +260,8 @@
                                 <mat-chip-list  *ngFor="let constraint of rule.constraints">
                                     <div class="row">
                                         <div class="col-lg-1">
-                                            <div>
-                                                <strong>{{constraint[0].type}}: </strong>
+                                            <div class="constraint-name-container">
+                                                <span>{{constraint[0].type}}</span>
                                             </div>
                                         </div>
                                         <div class="col-lg-11">
@@ -275,11 +275,11 @@
                                 </mat-chip-list>
 
                                 <div class="mat-button-container">
-                                    <button mat-button class="mat-button"  (click)="cloneRule(i,rule)">
-                                        Clone
-                                    </button>
                                     <button mat-button class="btn btn-danger mb-2"  (click)="removeRow(i,ruleDataSource)">
                                         Delete
+                                    </button>
+                                    <button mat-button class="btn mat-button mb-2"  (click)="cloneRule(i,rule)">
+                                        Clone
                                     </button>
                                 </div>
                             </mat-expansion-panel>

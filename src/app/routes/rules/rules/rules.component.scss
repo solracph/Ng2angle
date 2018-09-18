@@ -56,7 +56,9 @@ table, mat-paginator {
 
 .mat-button-container{
     padding: 10px;
-    padding-top: 20px;
+    padding-top: 30px;
+    float: left;
+    margin-left: -10px;
 }
 
 .mat-column-select{
@@ -87,3 +89,11 @@ table, :host /deep/ .mat-paginator-container{
     width: 100% !important;
 }
 
+.constraint-name-container{
+    padding-top: 10px;
+    color: #6f6f6f;
+}
+
+.existing-rules-body mat-expansion-panel{
+    border-bottom: solid 1px gainsboro;
+}
