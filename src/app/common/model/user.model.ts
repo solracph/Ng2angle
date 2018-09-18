@@ -3,4 +3,6 @@ export class User {
     id: number;
     name: string;
     rules: Array<Rule>;
+    applicationId: number;
+    applicationCode:string
 }

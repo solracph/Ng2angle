@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild,Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Rule } from '../../../common/model/rule.model';
 import { Constraint } from '../../../common/model/constraint.model';
@@ -9,9 +9,8 @@ import { SelectionModel} from '@angular/cdk/collections';
 import { AppState } from '../../../app.state';
 import { MaterialTableHelper } from '../../../common/service/material-table-helper.service'
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-
-import * as _ from 'lodash';
 import { Observable } from 'rxjs';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-rules',
@@ -208,13 +207,22 @@ export class RulesComponent implements OnInit {
 
                 var newConstraints = [];
                 rule.constraints.forEach(constraint => {
-                    if(_.find(constraint,["type","Application"]) != undefined){
-                        newConstraints.push(response.applicationSelection.selected);
-                    }else{
+                    if(_.find(constraint,["type","Application"]) == undefined){
                         newConstraints.push(constraint)
                     }
                 });
-        
+
+                if(response.applicationSelection.selected.length == this.ruleService.applicationList.length){
+                    newConstraints.push([{
+                        type: "Application",
+                        code: "AP-1",
+                        name: "All"
+                    }]);
+                }else{
+                    newConstraints.push(response.applicationSelection.selected);
+                }
+                
+
                 var _rule = {
                     id: this.appState.rulId,
                     code: `R${this.appState.rulId}`,
@@ -245,15 +253,8 @@ export class RulesComponent implements OnInit {
     
        return dialogRef.afterClosed();
     }
-
 }
 
-export interface DialogData {
-    animal: string;
-    name: string;
-}
-
-  
 @Component({
     selector: 'dialog-description-required',
     templateUrl: 'dialog-description-required.html',
@@ -265,7 +266,6 @@ export interface DialogData {
     onNoClick(): void {
         this.dialogRef.close();
     }
-  
 }
 
 @Component({
@@ -283,7 +283,7 @@ export interface DialogData {
 
     
     constructor(
-        public dialogRef: MatDialogRef<DialogDescriptionRequired>,
+        public dialogRef: MatDialogRef<DialogApplicationRequired>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private materialTableHelper: MaterialTableHelper,
         private _formBuilder: FormBuilder,
@@ -322,5 +322,4 @@ export interface DialogData {
     applyFilter(filterValue: string, dataSource) {
         this.materialTableHelper.applyFilter(filterValue,dataSource);
     }
-  
 }

@@ -8,34 +8,51 @@
                 </div>
                 <div class="md-card-body">
                     <mat-form-field>
+                        <mat-select placeholder="Filter by Application" name="filterByApplication">
+                            <mat-option (onSelectionChange)="applicationFilter($event)" [value]="0">
+                                All
+                            </mat-option>
+                            <mat-option (onSelectionChange)="applicationFilter($event)" *ngFor="let application of applicationList" [value]="application.id">
+                            {{application.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    {{selectedValue}}
+                    <mat-form-field>
                         <input matInput (keyup)="applyFilter($event.target.value,userDataSource)" placeholder="Filter">
                     </mat-form-field>
                     <table mat-table [dataSource]="userDataSource" class="mat-rule-table">
-                            <ng-container matColumnDef="select">
-                                    <th mat-header-cell *matHeaderCellDef >
-                                    <mat-checkbox 
-                                        (change)="$event ? userMasterToggle(userSelection,userDataSource) : null"
-                                        [checked]="userSelection.hasValue() && isAllSelected(userSelection,userDataSource)"
-                                        [indeterminate]="userSelection.hasValue() && !isAllSelected(userSelection,userDataSource)">
-                                    </mat-checkbox>
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                    <mat-checkbox 
-                                        (click)="$event.stopPropagation()"
-                                        (change)="$event ? userSelectionToggle(userSelection,row) : null"
-                                        [checked]="userSelection.isSelected(row)">
-                                    </mat-checkbox>
-                                    </td>
-                            </ng-container>
-                            <ng-container matColumnDef="name">
-                                <th mat-header-cell *matHeaderCellDef> User Name </th>
-                                <td mat-cell *matCellDef="let rule;let i = index">
-                                    {{rule.name}}
+                        <ng-container matColumnDef="select">
+                                <th mat-header-cell *matHeaderCellDef >
+                                <mat-checkbox 
+                                    (change)="$event ? userMasterToggle(userSelection,userDataSource) : null"
+                                    [checked]="userSelection.hasValue() && isAllSelected(userSelection,userDataSource)"
+                                    [indeterminate]="userSelection.hasValue() && !isAllSelected(userSelection,userDataSource)">
+                                </mat-checkbox>
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                <mat-checkbox 
+                                    (click)="$event.stopPropagation()"
+                                    (change)="$event ? userSelectionToggle(userSelection,row) : null"
+                                    [checked]="userSelection.isSelected(row)">
+                                </mat-checkbox>
                                 </td>
-                            </ng-container>
-                        
-                            <tr mat-header-row *matHeaderRowDef="['select','name']"></tr>
-                            <tr mat-row *matRowDef="let row; columns: ['select','name'];" (click)="userSelectionToggle(userSelection,row)"></tr>
+                        </ng-container>
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef> User Name </th>
+                            <td mat-cell *matCellDef="let rule;let i = index">
+                                {{rule.name}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="applicationCode">
+                            <th mat-header-cell *matHeaderCellDef> Application Code </th>
+                            <td mat-cell *matCellDef="let rule">
+                                {{rule.applicationCode}}
+                            </td>
+                        </ng-container>
+                    
+                        <tr mat-header-row *matHeaderRowDef="['select','name','applicationCode']"></tr>
+                        <tr mat-row *matRowDef="let row; columns: ['select','name','applicationCode'];" (click)="userSelectionToggle(userSelection,row)"></tr>
                     </table>
                     <mat-paginator #userPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
                 </div>

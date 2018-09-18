@@ -9,4 +9,6 @@ export
     public ruleList: any;
 
     public rulId: number = 0;
+
+    public userList: any;
 }

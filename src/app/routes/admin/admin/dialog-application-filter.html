@@ -1,11 +1,7 @@
-<h1 mat-dialog-title>Clone Rule</h1>
+<h1 mat-dialog-title>User Filter by Application</h1>
 <div mat-dialog-content>
   <p>Please select the application(s)</p>
-    <form [formGroup]="clonedRuleFormGroup">
-        <mat-form-field class="description-form-field">
-            <textarea  matInput placeholder="Rule Description" formControlName="descriptionCtrl"></textarea>
-        </mat-form-field>
-    </form>
+    
     <mat-form-field>
         <input matInput (keyup)="applyFilter($event.target.value,applicationDataSource)" placeholder="Filter">
     </mat-form-field>
@@ -39,10 +35,8 @@
             </tr>
     </table>
     <mat-paginator #applicationPaginator [pageSizeOptions]="[5,10,20]" showFirstLastButtons></mat-paginator>
-
-  
 </div>
 <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">Cancel</button>
-    <button mat-button (click)="onSave()" cdkFocusInitial>Ok</button>
+    <button mat-button (click)="onApply()" cdkFocusInitial>Apply</button>
 </div>
