@@ -130,3 +130,7 @@ table, :host /deep/ .mat-paginator-container{
     padding-top: 10px;
     color: #6f6f6f;
 }
+
+ mat-panel-title{
+    flex-grow: 0;
+}

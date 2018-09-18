@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RulesComponent } from './rules/rules.component';
+import { RulesComponent,DialogDescriptionRequired,DialogApplicationRequired } from './rules/rules.component';
 import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { RuleService } from './rules/rule.service';
@@ -13,7 +13,8 @@ const routes: Routes = [
         SharedModule,
         RouterModule.forChild(routes)
     ],
-    declarations: [RulesComponent],
+    declarations: [RulesComponent,DialogDescriptionRequired,DialogApplicationRequired],
+    entryComponents: [DialogDescriptionRequired,DialogApplicationRequired],
     exports: [
         RouterModule
     ],

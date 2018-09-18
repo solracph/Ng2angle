@@ -97,3 +97,7 @@ table, :host /deep/ .mat-paginator-container{
 .existing-rules-body mat-expansion-panel{
     border-bottom: solid 1px gainsboro;
 }
+
+.existing-rules-body mat-panel-title{
+    flex-grow: 0;
+}
