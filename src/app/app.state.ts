@@ -7,4 +7,6 @@ export
     constructor () {};
 
     public ruleList: any;
+
+    public rulId: number = 0;
 }

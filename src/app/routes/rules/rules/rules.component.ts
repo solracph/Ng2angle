@@ -112,11 +112,10 @@ export class RulesComponent implements OnInit {
     }
 
     saveRule(){
-        var ruleId = Math.random();
-
+        this.appState.rulId++;
         var newRule = {
-            id: ruleId,
-            code: `R0${this.ruleDataSource.data.length + 1}${this.applicationSelection.selected[0] != undefined ? '-' + this.applicationSelection.selected[0].code : '' }`,
+            id: this.appState.rulId,
+            code: `R0${this.appState.rulId}${this.applicationSelection.selected[0] != undefined ? '-' + this.applicationSelection.selected[0].code : '' }`,
             constraints: [],
             description: this.newRuleFormGroup.value.descriptionCtrl,
         }
@@ -187,8 +186,7 @@ export class RulesComponent implements OnInit {
     }
 
     cloneRule(i: number,rule: Rule){
-        console.log(rule.constraints)
-        var ruleId = Math.random();
+        this.appState.rulId++;
 
         var appCode;
         rule.constraints.forEach(constraint => {
@@ -196,8 +194,8 @@ export class RulesComponent implements OnInit {
         });
 
         var _rule = {
-            id: ruleId,
-            code: `R0${this.ruleDataSource.data.length + 1}${appCode != undefined ? '-' + appCode.code : '' }`,
+            id: this.appState.rulId,
+            code: `R0${this.appState.rulId}${appCode != undefined ? '-' + appCode.code : '' }`,
             constraints: rule.constraints,
             description: rule.description
         }
