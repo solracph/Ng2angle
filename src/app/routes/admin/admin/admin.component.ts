@@ -266,65 +266,8 @@ export class AdminComponent implements OnInit {
     filterRuleByApplication(event): void {
         if(event.isUserInput == true){
             this.filterRule = event.source.value;
-            this.ruleDataSource.data = this.filterRuleData(this.ruleList);
+            this.setUsersAvailableRules(this.userSelection);
         }
     }
-
-   /* openDialogApplicationFilter(): Observable<any> {
-        const dialogRef = this.dialog.open(DialogApplicationFilter, {
-            width: '550px',
-            data: {applicationDataSource: this.ruleService.applicationList }
-        });
-    
-       return dialogRef.afterClosed();
-    }*/
 }
-/*
-@Component({
-    selector: 'dialog-application-filter',
-    templateUrl: 'dialog-application-filter.html',
-    styleUrls: ['dialog-application-filter.scss']
-  })
-  export class DialogApplicationFilter {
 
-    @ViewChild('applicationPaginator') applicationPaginator: MatPaginator; 
-
-    public applicationSelection: SelectionModel<Application> = new SelectionModel<Application>(true, []);
-    public applicationDataSource: MatTableDataSource<Application> = new MatTableDataSource<Application>([]);
-    public clonedRuleFormGroup: FormGroup;
-
-    
-    constructor(
-        public dialogRef: MatDialogRef<DialogApplicationFilter>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
-        private materialTableHelper: MaterialTableHelper,
-    ) {}
-    
-
-    ngOnInit(){
-        this.applicationDataSource = new MatTableDataSource<Application>(this.data.applicationDataSource);
-        this.applicationDataSource.paginator = this.applicationPaginator;
-    }
-  
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
-
-    onApply(){
-        if(this.applicationSelection.selected.length > 0){
-            this.dialogRef.close({applicationSelection: this.applicationSelection});
-        }
-    }
-
-    isAllSelected(selection,dataSource) {
-        return this.materialTableHelper.isAllSelected(selection,dataSource)
-    }
-
-    masterToggle(selection,dataSource) {
-        this.materialTableHelper.masterToggle(selection,dataSource);
-    }
-
-    applyFilter(filterValue: string, dataSource) {
-        this.materialTableHelper.applyFilter(filterValue,dataSource);
-    }
-}*/
