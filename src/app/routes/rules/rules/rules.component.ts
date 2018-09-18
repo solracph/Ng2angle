@@ -116,7 +116,7 @@ export class RulesComponent implements OnInit {
 
         var newRule = {
             id: ruleId,
-            code: `R-${ruleId}`,
+            code: `R0${this.ruleDataSource.data.length + 1}${this.applicationSelection.selected[0] != undefined ? '-' + this.applicationSelection.selected[0].code : '' }`,
             constraints: [],
             description: this.newRuleFormGroup.value.descriptionCtrl,
         }

@@ -83,3 +83,7 @@ table, :host /deep/ .mat-paginator-container{
     background-color: #f8f8f8;
 }
 
+.existing-rules-body mat-paginator {
+    width: 100% !important;
+}
+
