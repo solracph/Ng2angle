@@ -43,9 +43,9 @@ export
     ]
 
     public applicationList: Application[] = [
-        {id: 1, name: 'application-1', code:'AP-1', type: "Application"},
-        {id: 2, name: 'application-2', code:'AP-2', type: "Application"},
-        {id: 3, name: 'application-3', code:'AP-3', type: "Application"}
+        {id: 1, name: 'Application-1', code:'AP-1', type: "Application"},
+        {id: 2, name: 'Application-2', code:'AP-2', type: "Application"},
+        {id: 3, name: 'Application-3', code:'AP-3', type: "Application"}
     ]
     
 };

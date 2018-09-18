@@ -186,12 +186,17 @@ export class RulesComponent implements OnInit {
     }
 
     cloneRule(i: number,rule: Rule){
-        
+        console.log(rule.constraints)
         var ruleId = Math.random();
+
+        var appCode;
+        rule.constraints.forEach(constraint => {
+            appCode = _.find(constraint,["type","Application"]);
+        });
 
         var _rule = {
             id: ruleId,
-            code: `R-${ruleId}`,
+            code: `R0${this.ruleDataSource.data.length + 1}${appCode != undefined ? '-' + appCode.code : '' }`,
             constraints: rule.constraints,
             description: rule.description
         }
