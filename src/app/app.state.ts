@@ -11,4 +11,6 @@ export
     public rulId: number = 0;
 
     public userList: any;
+
+    public availableRuleList: any;
 }

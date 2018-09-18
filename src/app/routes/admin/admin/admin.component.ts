@@ -39,6 +39,8 @@ export class AdminComponent implements OnInit {
     public pageSizeOptions: Array<number> = [5 ,10, 20];
     public applications = new FormControl();
     public applicationList: Array<Application>; 
+    public filterRule: any;
+    
     
 
     @ViewChild('rulePaginator') rulePaginator: MatPaginator;
@@ -105,8 +107,6 @@ export class AdminComponent implements OnInit {
     applyFilter(filterValue: string, dataSource) {
         this.materialTableHelper.applyFilter(filterValue,dataSource);
     }
-
-    
 
     addRulesToUsers(){
         this.userSelection.selected.forEach(user => {
@@ -176,17 +176,41 @@ export class AdminComponent implements OnInit {
                         {
                             this.ruleDataSource.data = [...this.appState.ruleList];
                             data = _.union(data,_.pullAll(this.ruleDataSource.data,user.rules));
+                            data = this.filterRuleData(data);
                         }
                     }); 
-                    this.ruleDataSource.data = data;
+                    this.ruleDataSource.data = this.filterRuleData(data);
                     
                 } else {
-                    this.ruleDataSource.data = [...this.appState.ruleList];
+                    this.ruleDataSource.data = [...this.filterRuleData(this.appState.ruleList)];
                 }
                 
             } else {
-                this.ruleDataSource.data = [...this.appState.ruleList];
+                this.ruleDataSource.data = [...this.filterRuleData(this.appState.ruleList)];
             }
+        }
+    }
+
+    filterRuleData(rules){
+        if(this.filterRule != 0 && this.filterRule != undefined)
+        {
+            var newRules = [];
+            rules.forEach(rule => {
+                rule.constraints.forEach(constraint => {
+                    constraint.forEach(cons => {
+                        if(cons.type == "Application"){
+                            if(cons.id == this.filterRule || cons.id == undefined){
+                                newRules.push(rule);
+                                return;
+                            }
+                        }
+                    });
+                });
+            });
+    
+            return newRules;
+        }else{
+            return rules;
         }
     }
 
@@ -210,7 +234,7 @@ export class AdminComponent implements OnInit {
 
     
 
-    applicationFilter(event): void{ 
+    filterUserByApplication(event): void{ 
         if(event.isUserInput == true){
 
             console.log(event.source.value);
@@ -237,6 +261,13 @@ export class AdminComponent implements OnInit {
         }
         
         
+    }
+
+    filterRuleByApplication(event): void {
+        if(event.isUserInput == true){
+            this.filterRule = event.source.value;
+            this.ruleDataSource.data = this.filterRuleData(this.ruleList);
+        }
     }
 
    /* openDialogApplicationFilter(): Observable<any> {
