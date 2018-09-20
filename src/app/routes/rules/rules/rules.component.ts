@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild,  } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Rule } from '../../../common/model/rule.model';
 import { Constraint } from '../../../common/model/constraint.model';
@@ -7,10 +7,12 @@ import { RuleService } from './rule.service';
 import { MatPaginator,MatTableDataSource, MatStepper } from '@angular/material';
 import { SelectionModel} from '@angular/cdk/collections';
 import { AppState } from '../../../app.state';
-import { MaterialTableHelper } from '../../../common/service/material-table-helper.service'
+import { MaterialTableHelper } from '../../../common/service/material-table-helper.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';
+import { DialogRuleCloneComponent } from '../rules/dialog/dialog-application-required.component';
+import { AlertDialogComponent } from '../../../common/dialog/alert/alert-dialog.component';
 
 @Component({
     selector: 'app-rules',
@@ -19,18 +21,15 @@ import * as _ from 'lodash';
 })
 export class RulesComponent implements OnInit {
 
-    
     constructor (
         private _formBuilder: FormBuilder,
         private ruleService: RuleService, 
         public appState: AppState, 
         private materialTableHelper: MaterialTableHelper,
         public dialog: MatDialog
-    )
-    {
-        
-    }
-     
+    ) {}
+
+    @ViewChild('segmentPaginator') segmentPaginator: MatPaginator; 
     @ViewChild('contractPaginator') contractPaginator: MatPaginator;
     @ViewChild('pbpPaginator') pbpPaginator: MatPaginator;
     @ViewChild('taxIdPaginator') taxIdPaginator: MatPaginator;
@@ -42,6 +41,9 @@ export class RulesComponent implements OnInit {
     public newRuleFormGroup: FormGroup;
     public ruleList: Array<Rule>;
     public pageSizeOptions: Array<number> = [5 ,10, 20];
+
+    public segmentDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Constraint>(this.ruleService.segmentList);
+    public segmentSelection: SelectionModel<Constraint>= new SelectionModel<Constraint>(true, []);
 
     public contractDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Constraint>(this.ruleService.contractList);
     public contractSelection: SelectionModel<Constraint>= new SelectionModel<Constraint>(true, []);
@@ -67,6 +69,7 @@ export class RulesComponent implements OnInit {
             this.updateRuleDataSource(rule);
         });
         
+        this.segmentDataSource.paginator = this.segmentPaginator;
         this.contractDataSource.paginator = this.contractPaginator;
         this.pbpDataSource.paginator = this.pbpPaginator;
         this.taxIdDataSource.paginator = this.taxIdPaginator;
@@ -98,6 +101,7 @@ export class RulesComponent implements OnInit {
     }
 
     selectionReset() {
+        this.segmentSelection =  new SelectionModel<Constraint>(true, []);
         this.contractSelection = new SelectionModel<Constraint>(true, []);
         this.taxIdSelection = new SelectionModel<Constraint>(true, []);
         this.pbpSelection = new SelectionModel<Constraint>(true, []);
@@ -133,6 +137,18 @@ export class RulesComponent implements OnInit {
             code: `R${this.appState.rulId}`,
             constraints: [],
             description: this.newRuleFormGroup.value.descriptionCtrl,
+        }
+
+
+        if(this.segmentSelection.selected.length > 0) {
+            if(this.segmentSelection.selected.length == this.segmentDataSource.data.length){
+                newRule.constraints.push([{
+                    type: "Segment",
+                    name: "All"
+                }])
+            } else {
+                newRule.constraints.push(this.segmentSelection.selected);
+            }
         }
 
         if(this.contractSelection.selected.length > 0) {
@@ -201,7 +217,7 @@ export class RulesComponent implements OnInit {
 
     cloneRule(i: number,rule: any){
 
-        this.openDialogApplicationRequired(rule).subscribe((response : any) =>{
+        this.openDialogRuleClone(rule).subscribe((response : any) =>{
             if(response){
                 this.appState.rulId++;
 
@@ -240,13 +256,14 @@ export class RulesComponent implements OnInit {
 
 
     openDialogDescriptionRequired(): void {
-        const dialogRef = this.dialog.open(DialogDescriptionRequired, {
-          width: '250px'
+        this.dialog.open(AlertDialogComponent, {
+          width: '250px',
+          data: { message: "Rule Description is required!"}
         });
     }
 
-    openDialogApplicationRequired(rule: Rule): Observable<any> {
-        const dialogRef = this.dialog.open(DialogApplicationRequired, {
+    openDialogRuleClone(rule: Rule): Observable<any> {
+        const dialogRef = this.dialog.open(DialogRuleCloneComponent, {
           width: '550px',
           data: {applicationDataSource: this.applicationDataSource.data,description: rule.description }
         });
@@ -255,71 +272,3 @@ export class RulesComponent implements OnInit {
     }
 }
 
-@Component({
-    selector: 'dialog-description-required',
-    templateUrl: 'dialog-description-required.html',
-  })
-  export class DialogDescriptionRequired {
-  
-    constructor(public dialogRef: MatDialogRef<DialogDescriptionRequired> ) {}
-
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
-}
-
-@Component({
-    selector: 'dialog-application-required',
-    templateUrl: 'dialog-application-required.html',
-    styleUrls: ['dialog-application-required.scss']
-  })
-  export class DialogApplicationRequired {
-
-    @ViewChild('applicationPaginator') applicationPaginator: MatPaginator; 
-
-    public applicationSelection: SelectionModel<Application> = new SelectionModel<Application>(true, []);
-    public applicationDataSource: MatTableDataSource<Application> = new MatTableDataSource<Application>([]);
-    public clonedRuleFormGroup: FormGroup;
-
-    
-    constructor(
-        public dialogRef: MatDialogRef<DialogApplicationRequired>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
-        private materialTableHelper: MaterialTableHelper,
-        private _formBuilder: FormBuilder,
-    ) {}
-    
-
-    ngOnInit(){
-
-        this.clonedRuleFormGroup = this._formBuilder.group({
-            descriptionCtrl:  [this.data.description,Validators.required]
-        });
-
-
-        this.applicationDataSource = new MatTableDataSource<Application>(this.data.applicationDataSource);
-        this.applicationDataSource.paginator = this.applicationPaginator;
-    }
-  
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
-
-    onSave(){
-        if(this.clonedRuleFormGroup.value.descriptionCtrl != "" && this.applicationSelection.selected.length > 0){
-            this.dialogRef.close({description: this.clonedRuleFormGroup.value.descriptionCtrl , applicationSelection: this.applicationSelection});
-        }
-    }
-
-    isAllSelected(selection,dataSource) {
-        return this.materialTableHelper.isAllSelected(selection,dataSource)
-    }
-
-    masterToggle(selection,dataSource) {
-        this.materialTableHelper.masterToggle(selection,dataSource);
-    }
-
-    applyFilter(filterValue: string, dataSource) {
-        this.materialTableHelper.applyFilter(filterValue,dataSource);
-    }
-}

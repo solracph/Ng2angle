@@ -198,7 +198,7 @@
                                                             </mat-chip-list>
                                                             <div *ngIf="userSelection.selected.length > 1" class="users-assigned-to-rules-container overflow-hidden" >
                                                                 <!--<div class="see-more" (click)="showAllUserList($event)">...</div>-->
-                                                                <mat-chip disabled *ngFor="let user of userSelection.selected" class="users-assigned-to-rules-content">{{setUsersNameToAssignedRules(user.rules,rule.id,user)}}</mat-chip>
+                                                                <mat-chip disabled *ngFor="let user of userSelection.selected" class="users-assigned-to-rules-content">{{getUsersNameToAssignedRules(user.rules,rule.id,user)}}</mat-chip>
                                                             </div>
                                                         </mat-expansion-panel>
                                                     </mat-accordion>

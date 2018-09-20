@@ -47,5 +47,17 @@ export
         {id: 2, name: 'application-2', code:'APP-2', type: "Application"},
         {id: 3, name: 'application-3', code:'APP-3', type: "Application"}
     ]
+
+    public segmentList: Constraint[] = [
+        {id: 1, name: 'ACO', type: "Segment"},
+        {id: 2, name: 'DNSP', type: "Segment"},
+        {id: 3, name: 'FL-N', type: "Segment"},
+        {id: 4, name: 'FL-S', type: "Segment"},
+        {id: 5, name: 'FL-S DSNP', type: "Segment"},
+        {id: 6, name: 'FL-S WELLMED', type: "Segment"},
+        {id: 6, name: 'GROUP', type: "Segment"},
+        {id: 6, name: 'TVH', type: "Segment"},
+        {id: 6, name: 'WELLMED', type: "Segment"}
+    ]
     
 };

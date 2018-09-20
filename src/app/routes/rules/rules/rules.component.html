@@ -14,7 +14,46 @@
                         <mat-icon>done</mat-icon>
                     </ng-template> 
                     <mat-step >
-                        <ng-template matStepLabel>Contract</ng-template>
+                        <ng-template matStepLabel>Segments</ng-template>
+                        <mat-form-field>
+                            <input matInput (keyup)="applyFilter($event.target.value,segmentDataSource)" placeholder="Filter">
+                        </mat-form-field>
+                        <table mat-table [dataSource]="segmentDataSource">
+                                <!-- Checkbox Column -->
+                                <ng-container matColumnDef="select">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                    <mat-checkbox 
+                                        (change)="$event ? masterToggle(segmentSelection,segmentDataSource) : null"
+                                        [checked]="segmentSelection.hasValue() && isAllSelected(segmentSelection,segmentDataSource)"
+                                        [indeterminate]="segmentSelection.hasValue() && !isAllSelected(segmentSelection,segmentDataSource)">
+                                    </mat-checkbox>
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                    <mat-checkbox 
+                                        (click)="$event.stopPropagation()"
+                                        (change)="$event ? segmentSelection.toggle(row) : null"
+                                        [checked]="segmentSelection.isSelected(row)">
+                                    </mat-checkbox>
+                                    </td>
+                                </ng-container>
+                                
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef> Segment </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                                </ng-container>
+                                
+                                <tr mat-header-row *matHeaderRowDef="['select','name']"></tr>
+                                <tr mat-row *matRowDef="let row; columns: ['select','name'];"
+                                    (click)="segmentSelection.toggle(row)">
+                                </tr>
+                        </table>
+                        <mat-paginator #segmentPaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+                        <div>
+                            <button mat-button matStepperNext>Next</button>
+                        </div>
+                    </mat-step>
+                    <mat-step >
+                        <ng-template matStepLabel>Contracts</ng-template>
                         <mat-form-field>
                             <input matInput (keyup)="applyFilter($event.target.value,contractDataSource)" placeholder="Filter">
                         </mat-form-field>

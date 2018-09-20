@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppState } from '../../../app.state';
 import { MaterialTableHelper } from '../../../common/service/material-table-helper.service';
 import { MatPaginator,MatTableDataSource } from '@angular/material';
@@ -8,17 +8,12 @@ import { User } from '../../../common/model/user.model';
 import { Application } from '../../../common/model/application.model';
 import { AdminService } from './admin.service';
 import { RuleService } from '../../rules/rules/rule.service';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { Observable } from 'rxjs';
+import {  FormControl } from '@angular/forms';
+import { MatDialog} from '@angular/material';
 
 import * as _ from 'lodash';
 
-export interface Food {
-    value: string;
-    viewValue: string;
-  }
-  
+
 
 @Component({
     selector: 'app-admin',
@@ -27,21 +22,20 @@ export interface Food {
 })
 export class AdminComponent implements OnInit {
 
-    foods: Food[] = [
-        {value: 'steak-0', viewValue: 'Steak'},
-        {value: 'pizza-1', viewValue: 'Pizza'},
-        {value: 'tacos-2', viewValue: 'Tacos'}
-    ];
-    selectedValue;
-    
+    constructor(
+        public appState: AppState,
+        private materialTableHelper: MaterialTableHelper,
+        private adminService: AdminService,
+        public ruleService: RuleService,
+        public dialog: MatDialog
+    ) {}
+
     public ruleList: Array<Rule>;
     public usersNameToAssignedRules;
     public pageSizeOptions: Array<number> = [5 ,10, 20];
     public applications = new FormControl();
     public applicationList: Array<Application>; 
     public filterRule: any;
-    
-    
 
     @ViewChild('rulePaginator') rulePaginator: MatPaginator;
     @ViewChild('userPaginator') userPaginator: MatPaginator;
@@ -55,16 +49,6 @@ export class AdminComponent implements OnInit {
 
     public userDataSource: MatTableDataSource<User> = new MatTableDataSource<User>(this.adminService.getUsers());
     public userSelection: SelectionModel<User> = new SelectionModel<User>(true, []);
-
-    
-    
-    constructor(
-        public appState: AppState,
-        private materialTableHelper: MaterialTableHelper,
-        private adminService: AdminService,
-        public ruleService: RuleService,
-        public dialog: MatDialog
-    ){ }
 
     ngOnInit() {
         this.appState.userList = this.adminService.getUsers();
@@ -117,9 +101,7 @@ export class AdminComponent implements OnInit {
 
         this.setUsersAvailableRules(this.userSelection);
         this.setUserCurrentRules(this.userSelection);
-
         this.ruleSelection = new SelectionModel<Rule>(true, []);
-
         this.maintainAppStateUserList(this.userDataSource.data);
     }
 
@@ -142,14 +124,10 @@ export class AdminComponent implements OnInit {
         }); 
         this.setUsersAvailableRules(this.userSelection);
         this.assignedRulesSelection = new SelectionModel<Rule>(true, []);
-
         this.maintainAppStateUserList(this.userDataSource.data);
-        
     }
 
-    maintainAppStateUserList(users: Array<User>)
-    {
-
+    maintainAppStateUserList(users: Array<User>) {
         this.appState.userList.forEach(suser => {
             users.forEach(user => {
                 if(user.id == suser.id){
@@ -157,18 +135,14 @@ export class AdminComponent implements OnInit {
                 }
             });
         });
-
     }
 
-    setUsersAvailableRules(users)
-    {
+    setUsersAvailableRules(users)  {
         if(this.appState.ruleList != undefined)
         {
             var haveAllRulesAvailable  = _.find(users.selected, function(o) { return o.rules.length == 0 });
-    
             if(haveAllRulesAvailable == undefined)
             {
-                
                 if(users.selected.length > 0){
                     var data = [];
                     users.selected.forEach(user => {
@@ -225,20 +199,14 @@ export class AdminComponent implements OnInit {
         this.assignedRulesDataSource.data = data;
     }
 
-    setUsersNameToAssignedRules(userRules,rulId,user){
-        if(_.find(userRules,['id',rulId]) != undefined )
-        {
+    getUsersNameToAssignedRules(userRules,rulId,user) {
+        if(_.find(userRules,['id',rulId]) != undefined)
             return user.name
-        }
     }
-
     
 
-    filterUserByApplication(event): void{ 
+    filterUserByApplication(event): void { 
         if(event.isUserInput == true){
-
-            console.log(event.source.value);
-
             if(event.source.value == 0){
                 this.userDataSource.data = [...this.appState.userList];
                 return;
@@ -247,8 +215,7 @@ export class AdminComponent implements OnInit {
             this.setUsersAvailableRules(this.userSelection);
             this.assignedRulesDataSource = new MatTableDataSource<User>();
 
-
-            var users = [...this.appState.userList]
+            var users = [...this.appState.userList];
             var _users = [];
                 
                 users.forEach(user => {
@@ -259,8 +226,6 @@ export class AdminComponent implements OnInit {
 
             this.userDataSource.data = _users;
         }
-        
-        
     }
 
     filterRuleByApplication(event): void {
