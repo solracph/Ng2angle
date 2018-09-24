@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { RuleService } from './rules/rule.service';
 import { AlertDialogComponent } from '../../common/dialog/alert/alert-dialog.component';
-
+import { MaterialTablePaginatorFilterModule } from '../../common/component/material-table/material-table-paginator-filter.module'; 
 
 const routes: Routes = [
     { path: '', component: RulesComponent },
@@ -14,7 +14,8 @@ const routes: Routes = [
 @NgModule({
     imports: [
         SharedModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        MaterialTablePaginatorFilterModule
     ],
     declarations: [RulesComponent,DialogRuleCloneComponent, AlertDialogComponent],
     entryComponents: [DialogRuleCloneComponent, AlertDialogComponent],

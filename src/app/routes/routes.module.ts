@@ -12,7 +12,8 @@ import { routes } from './routes';
         SharedModule,
         RouterModule.forRoot(routes)
     ],
-    declarations: [],
+    declarations: [
+    ],
     exports: [
         RouterModule
     ]

@@ -1,0 +1,10 @@
+table,mat-paginator {
+    width: 100%;
+}
+table, :host /deep/ .mat-paginator-container{
+    border: solid 1px #e0e0e0;
+}
+
+.mat-column-select{
+    width: 100px;
+}

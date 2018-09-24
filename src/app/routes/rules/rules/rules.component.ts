@@ -14,6 +14,7 @@ import * as _ from 'lodash';
 import { DialogRuleCloneComponent } from '../rules/dialog/dialog-application-required.component';
 import { AlertDialogComponent } from '../../../common/dialog/alert/alert-dialog.component';
 
+
 @Component({
     selector: 'app-rules',
     templateUrl: './rules.component.html',
@@ -138,7 +139,6 @@ export class RulesComponent implements OnInit {
             constraints: [],
             description: this.newRuleFormGroup.value.descriptionCtrl,
         }
-
 
         if(this.segmentSelection.selected.length > 0) {
             if(this.segmentSelection.selected.length == this.segmentDataSource.data.length){

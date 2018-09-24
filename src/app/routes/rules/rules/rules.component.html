@@ -5,7 +5,6 @@
                 <div class="md-card-heading">
                     <div class="md-card-title">New Rule</div>
                 </div>
-
                 <mat-horizontal-stepper [linear]="false" #stepper>
                     <ng-template matStepperIcon="number">
                         <mat-icon>edit</mat-icon>
@@ -15,117 +14,31 @@
                     </ng-template> 
                     <mat-step >
                         <ng-template matStepLabel>Segments</ng-template>
-                        <mat-form-field>
-                            <input matInput (keyup)="applyFilter($event.target.value,segmentDataSource)" placeholder="Filter">
-                        </mat-form-field>
-                        <table mat-table [dataSource]="segmentDataSource">
-                                <!-- Checkbox Column -->
-                                <ng-container matColumnDef="select">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                    <mat-checkbox 
-                                        (change)="$event ? masterToggle(segmentSelection,segmentDataSource) : null"
-                                        [checked]="segmentSelection.hasValue() && isAllSelected(segmentSelection,segmentDataSource)"
-                                        [indeterminate]="segmentSelection.hasValue() && !isAllSelected(segmentSelection,segmentDataSource)">
-                                    </mat-checkbox>
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                    <mat-checkbox 
-                                        (click)="$event.stopPropagation()"
-                                        (change)="$event ? segmentSelection.toggle(row) : null"
-                                        [checked]="segmentSelection.isSelected(row)">
-                                    </mat-checkbox>
-                                    </td>
-                                </ng-container>
-                                
-                                <ng-container matColumnDef="name">
-                                    <th mat-header-cell *matHeaderCellDef> Segment </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                </ng-container>
-                                
-                                <tr mat-header-row *matHeaderRowDef="['select','name']"></tr>
-                                <tr mat-row *matRowDef="let row; columns: ['select','name'];"
-                                    (click)="segmentSelection.toggle(row)">
-                                </tr>
-                        </table>
-                        <mat-paginator #segmentPaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
-                        <div>
-                            <button mat-button matStepperNext>Next</button>
+                        <div class="row">
+                            <div class="col-6">
+                                <material-table-paginator-filter [dataSource]="segmentDataSource" [selection]="segmentSelection" [pageSizeOptions]="pageSizeOptions"></material-table-paginator-filter>
+                            </div>
                         </div>
+                        <button mat-button matStepperNext>Next</button>
                     </mat-step>
                     <mat-step >
                         <ng-template matStepLabel>Contracts</ng-template>
-                        <mat-form-field>
-                            <input matInput (keyup)="applyFilter($event.target.value,contractDataSource)" placeholder="Filter">
-                        </mat-form-field>
-                        <table mat-table [dataSource]="contractDataSource">
-                                <!-- Checkbox Column -->
-                                <ng-container matColumnDef="select">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                    <mat-checkbox 
-                                        (change)="$event ? masterToggle(contractSelection,contractDataSource) : null"
-                                        [checked]="contractSelection.hasValue() && isAllSelected(contractSelection,contractDataSource)"
-                                        [indeterminate]="contractSelection.hasValue() && !isAllSelected(contractSelection,contractDataSource)">
-                                    </mat-checkbox>
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                    <mat-checkbox 
-                                        (click)="$event.stopPropagation()"
-                                        (change)="$event ? contractSelection.toggle(row) : null"
-                                        [checked]="contractSelection.isSelected(row)">
-                                    </mat-checkbox>
-                                    </td>
-                                </ng-container>
-                                
-                                <ng-container matColumnDef="name">
-                                    <th mat-header-cell *matHeaderCellDef> Contract </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                </ng-container>
-                                
-                                <tr mat-header-row *matHeaderRowDef="['select','name']"></tr>
-                                <tr mat-row *matRowDef="let row; columns: ['select','name'];"
-                                    (click)="contractSelection.toggle(row)">
-                                </tr>
-                        </table>
-                        <mat-paginator #contractPaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+                        <div class="row">
+                            <div class="col-6">
+                                <material-table-paginator-filter [dataSource]="contractDataSource" [selection]="contractSelection" [pageSizeOptions]="pageSizeOptions"></material-table-paginator-filter>
+                            </div>
+                        </div>
                         <div>
                             <button mat-button matStepperNext>Next</button>
                         </div>
                     </mat-step>
                     <mat-step>
                         <ng-template matStepLabel>PBP</ng-template>
-                        <mat-form-field>
-                        <input matInput (keyup)="applyFilter($event.target.value,pbpDataSource)" placeholder="Filter">
-                        </mat-form-field>
-                        <table mat-table [dataSource]="pbpDataSource">
-                                <!-- Checkbox Column -->
-                                <ng-container matColumnDef="select">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                    <mat-checkbox 
-                                        (change)="$event ? masterToggle(pbpSelection,pbpDataSource) : null"
-                                        [checked]="pbpSelection.hasValue() && isAllSelected(pbpSelection,pbpDataSource)"
-                                        [indeterminate]="pbpSelection.hasValue() && !isAllSelected(pbpSelection,pbpDataSource)">
-                                    </mat-checkbox>
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                    <mat-checkbox 
-                                        (click)="$event.stopPropagation()"
-                                        (change)="$event ? pbpSelection.toggle(row) : null"
-                                        [checked]="pbpSelection.isSelected(row)">
-                                    </mat-checkbox>
-                                    </td>
-                                </ng-container>
-                                
-                                <ng-container matColumnDef="name">
-                                    <th mat-header-cell *matHeaderCellDef> PBP </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                </ng-container>
-                                
-                                <tr mat-header-row *matHeaderRowDef="['select','name']"></tr>
-                                <tr mat-row *matRowDef="let row; columns: ['select','name'];"
-                                    (click)="pbpSelection.toggle(row)">
-                                </tr>
-                        </table>
-                        <mat-paginator #pbpPaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+                        <div class="row">
+                            <div class="col-6">
+                                <material-table-paginator-filter [dataSource]="pbpDataSource" [selection]="pbpSelection" [pageSizeOptions]="pageSizeOptions"></material-table-paginator-filter>
+                            </div>
+                        </div>
                         <div>
                             <button mat-button matStepperPrevious>Back</button>
                             <button mat-button matStepperNext>Next</button>
@@ -133,39 +46,11 @@
                     </mat-step>
                     <mat-step>
                         <ng-template matStepLabel>Tax ID</ng-template>
-                        <mat-form-field>
-                            <input matInput (keyup)="applyFilter($event.target.value,taxIdDataSource)" placeholder="Filter">
-                        </mat-form-field>
-                        <table mat-table [dataSource]="taxIdDataSource">
-                                <!-- Checkbox Column -->
-                                <ng-container matColumnDef="select">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                    <mat-checkbox 
-                                        (change)="$event ? masterToggle(taxIdSelection,taxIdDataSource) : null"
-                                        [checked]="taxIdSelection.hasValue() && isAllSelected(taxIdSelection,taxIdDataSource)"
-                                        [indeterminate]="taxIdSelection.hasValue() && !isAllSelected(taxIdSelection,taxIdDataSource)">
-                                    </mat-checkbox>
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                    <mat-checkbox 
-                                        (click)="$event.stopPropagation()"
-                                        (change)="$event ? taxIdSelection.toggle(row) : null"
-                                        [checked]="taxIdSelection.isSelected(row)">
-                                    </mat-checkbox>
-                                    </td>
-                                </ng-container>
-                                
-                                <ng-container matColumnDef="name">
-                                    <th mat-header-cell *matHeaderCellDef> Tax Id </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                </ng-container>
-                                
-                                <tr mat-header-row *matHeaderRowDef="['select','name']"></tr>
-                                <tr mat-row *matRowDef="let row; columns: ['select','name'];"
-                                    (click)="taxIdSelection.toggle(row)">
-                                </tr>
-                        </table>
-                        <mat-paginator #taxIdPaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+                        <div class="row">
+                            <div class="col-6">
+                                <material-table-paginator-filter [dataSource]="taxIdDataSource" [selection]="taxIdSelection" [pageSizeOptions]="pageSizeOptions"></material-table-paginator-filter>
+                            </div>
+                        </div>
                         <div>
                             <button mat-button matStepperPrevious>Back</button>
                             <button mat-button matStepperNext>Next</button>
@@ -173,39 +58,11 @@
                     </mat-step>
                     <mat-step>
                             <ng-template matStepLabel>Measures</ng-template>
-                            <mat-form-field>
-                                <input matInput (keyup)="applyFilter($event.target.value,measureDataSource)" placeholder="Filter">
-                            </mat-form-field>
-                            <table mat-table [dataSource]="measureDataSource">
-                                    <!-- Checkbox Column -->
-                                    <ng-container matColumnDef="select">
-                                        <th mat-header-cell *matHeaderCellDef>
-                                        <mat-checkbox 
-                                            (change)="$event ? masterToggle(measureSelection,measureDataSource) : null"
-                                            [checked]="measureSelection.hasValue() && isAllSelected(measureSelection,measureDataSource)"
-                                            [indeterminate]="measureSelection.hasValue() && !isAllSelected(measureSelection,measureDataSource)">
-                                        </mat-checkbox>
-                                        </th>
-                                        <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox 
-                                            (click)="$event.stopPropagation()"
-                                            (change)="$event ? measureSelection.toggle(row) : null"
-                                            [checked]="measureSelection.isSelected(row)">
-                                        </mat-checkbox>
-                                        </td>
-                                    </ng-container>
-                                    
-                                    <ng-container matColumnDef="name">
-                                        <th mat-header-cell *matHeaderCellDef> Measure </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                    </ng-container>
-                                    
-                                    <tr mat-header-row *matHeaderRowDef="['select','name']"></tr>
-                                    <tr mat-row *matRowDef="let row; columns: ['select','name'];"
-                                        (click)="measureSelection.toggle(row)">
-                                    </tr>
-                            </table>
-                            <mat-paginator #measurePaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+                            <div class="row">
+                                <div class="col-6">
+                                    <material-table-paginator-filter [dataSource]="measureDataSource" [selection]="measureSelection" [pageSizeOptions]="pageSizeOptions"></material-table-paginator-filter>
+                                </div>
+                            </div>
                             <div>
                             <button mat-button matStepperPrevious>Back</button>
                             <button mat-button matStepperNext>Next</button>
@@ -213,42 +70,14 @@
                     </mat-step>
                     <mat-step >
                             <ng-template matStepLabel>Applications</ng-template>
-                            <mat-form-field>
-                                <input matInput (keyup)="applyFilter($event.target.value,applicationDataSource)" placeholder="Filter">
-                            </mat-form-field>
-                            <table mat-table [dataSource]="applicationDataSource">
-                                    <!-- Checkbox Column -->
-                                    <ng-container matColumnDef="select">
-                                        <th mat-header-cell *matHeaderCellDef >
-                                        <mat-checkbox 
-                                            (change)="$event ? masterToggle(applicationSelection,applicationDataSource) : null"
-                                            [checked]="applicationSelection.hasValue() && isAllSelected(applicationSelection,applicationDataSource)"
-                                            [indeterminate]="applicationSelection.hasValue() && !isAllSelected(applicationSelection,applicationDataSource)">
-                                        </mat-checkbox>
-                                        </th>
-                                        <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox 
-                                            (click)="$event.stopPropagation()"
-                                            (change)="$event ? applicationSelection.toggle(row) : null"
-                                            [checked]="applicationSelection.isSelected(row)">
-                                        </mat-checkbox>
-                                        </td>
-                                    </ng-container>
-                                    
-                                    <ng-container matColumnDef="name">
-                                        <th mat-header-cell *matHeaderCellDef> Application </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                    </ng-container>
-                                    
-                                    <tr mat-header-row *matHeaderRowDef="['select','name']"></tr>
-                                    <tr mat-row *matRowDef="let row; columns: ['select','name'];"
-                                        (click)="applicationSelection.toggle(row)">
-                                    </tr>
-                            </table>
-                            <mat-paginator #applicationPaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+                            <div class="row">
+                                <div class="col-6">
+                                    <material-table-paginator-filter [dataSource]="applicationDataSource" [selection]="applicationSelection" [pageSizeOptions]="pageSizeOptions"></material-table-paginator-filter>
+                                </div>
+                            </div>
                             <div>
-                            <button mat-button matStepperPrevious>Back</button>
-                            <button mat-button matStepperNext>Next</button>
+                                <button mat-button matStepperPrevious>Back</button>
+                                <button mat-button matStepperNext>Next</button>
                             </div>
                     </mat-step>
                     <mat-step>
@@ -325,8 +154,6 @@
                         </mat-accordion>
                     </td>
                     </ng-container>
-                
-                
                     <tr mat-header-row *matHeaderRowDef="['code']"></tr>
                     <tr mat-row *matRowDef="let row; columns: ['code'];"></tr>
             </table>
@@ -334,3 +161,4 @@
         </div>
     </div>
 </div>
+
