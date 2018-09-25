@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild,  } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Rule } from '../../../common/model/rule.model';
 import { Constraint } from '../../../common/model/constraint.model';
@@ -42,6 +42,8 @@ export class RulesComponent implements OnInit {
     public newRuleFormGroup: FormGroup;
     public ruleList: Array<Rule>;
     public pageSizeOptions: Array<number> = [5 ,10, 20];
+    public isEditing: boolean = false;
+    public noEditedRule: any;//Array<Rule>;
 
     public segmentDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Constraint>(this.ruleService.segmentList);
     public segmentSelection: SelectionModel<Constraint>= new SelectionModel<Constraint>(true, []);
@@ -127,6 +129,7 @@ export class RulesComponent implements OnInit {
 
     saveRule(){
         this.appState.rulId++;
+        this.cancelEditRule();
 
         if(this.newRuleFormGroup.value.descriptionCtrl == ""){
             this.openDialogDescriptionRequired();
@@ -137,6 +140,7 @@ export class RulesComponent implements OnInit {
             id: this.appState.rulId,
             code: `R${this.appState.rulId}`,
             constraints: [],
+            isEditing: false,
             description: this.newRuleFormGroup.value.descriptionCtrl,
         }
 
@@ -243,10 +247,11 @@ export class RulesComponent implements OnInit {
                     id: this.appState.rulId,
                     code: `R${this.appState.rulId}`,
                     constraints: newConstraints,
-                    description: response.description
+                    description: response.description,
+                    isEditing: false
                 }
         
-                this.updateRuleDataSource(_rule);
+                this.updateRuleDataSource(_.cloneDeep(_rule));
                 this.ruleList.push(_rule);
                 this.appState.ruleList = this.ruleList;
             }
@@ -254,6 +259,49 @@ export class RulesComponent implements OnInit {
         
     }
 
+    editRule(rule: Rule){
+        this.noEditedRule = _.cloneDeep(this.ruleDataSource.data);
+        this.toggleEditeRule(rule);
+    }
+
+    cancelEditRule(){
+        if(this.noEditedRule != undefined && this.isEditing == true)
+        this.ruleDataSource.data = _.cloneDeep(this.noEditedRule);
+        this.isEditing = false;
+       // this.toggleGeneralEditeRule();
+    }
+    
+    toggleEditeRule(rule){
+        console.log(this.ruleDataSource.data)
+        this.ruleDataSource.data.forEach( (_rule) => {
+            if(_rule.id != rule.id)
+            _rule.isEditing = false;
+        });
+        rule.isEditing = !rule.isEditing
+        this.toggleGeneralEditeRule();
+    }
+
+    togglePanelOpen(rule){
+        rule.expanded = !rule.expanded;
+    }
+
+    toggleGeneralEditeRule(){
+        this.isEditing = !this.isEditing
+    }
+
+    removeConstraint(_rule: any,_constraint: Constraint,cindex) {
+        _rule.constraints.forEach((constraints: any) => {
+           _.remove(constraints, (constraint: Constraint)=>{
+                if(constraint.type == _constraint.type && constraint.id == _constraint.id )
+                return constraint;
+           })
+        });
+
+        _.remove(_rule.constraints,(constraint: any)=>{
+            if(constraint.length == 0)
+            return constraint;
+        })
+    }
 
     openDialogDescriptionRequired(): void {
         this.dialog.open(AlertDialogComponent, {
@@ -269,6 +317,18 @@ export class RulesComponent implements OnInit {
         });
     
        return dialogRef.afterClosed();
+    }
+
+    
+
+    ngOnDestroy() {
+        this.cancelEditRule();
+        this.appState.ruleList = this.ruleDataSource.data;
+        this.ruleDataSource.data.forEach( (_rule) => {
+            _rule.isEditing = false;
+            _rule.expanded = false;
+        });
+        
     }
 }
 

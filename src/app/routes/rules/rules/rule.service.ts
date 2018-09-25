@@ -12,7 +12,7 @@ export
         {id: 1, name: 'Contracts-1', type: "Contract"},
         {id: 2, name: 'Contracts-2', type: "Contract"},
         {id: 3, name: 'Contracts-3', type: "Contract"},
-        {id: 3, name: 'Contracts-4', type: "Contract"},
+        {id: 4, name: 'Contracts-4', type: "Contract"},
     ];
 
     public pbpList: Constraint[] = [
@@ -55,9 +55,9 @@ export
         {id: 4, name: 'FL-S', type: "Segment"},
         {id: 5, name: 'FL-S DSNP', type: "Segment"},
         {id: 6, name: 'FL-S WELLMED', type: "Segment"},
-        {id: 6, name: 'GROUP', type: "Segment"},
-        {id: 6, name: 'TVH', type: "Segment"},
-        {id: 6, name: 'WELLMED', type: "Segment"}
+        {id: 7, name: 'GROUP', type: "Segment"},
+        {id: 8, name: 'TVH', type: "Segment"},
+        {id: 9, name: 'WELLMED', type: "Segment"}
     ]
     
 };

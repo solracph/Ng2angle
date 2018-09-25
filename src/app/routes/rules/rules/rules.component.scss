@@ -8,8 +8,22 @@
    // display: none;
 }
 
+
+
+:host /deep/ .mat-chip.mat-standard-chip.mat-chip-selected[ng-reflect-color="primary"]{
+    background-color: #2196F3 !important;
+    color: #fff !important;
+}
+
+:host /deep/ .mat-icon.mat-primary{
+    color: #E53935;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
 :host /deep/ .mat-chip.mat-standard-chip.mat-chip-selected.mat-primary{
-    background-color: #2196F3;
+    background-color: #e3e3e3;
+    color: #000000;
 }
 
 :host /deep/ .mat-step-header .mat-step-icon-not-touched{
