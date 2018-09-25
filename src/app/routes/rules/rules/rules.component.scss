@@ -21,6 +21,14 @@
     cursor: pointer;
 }
 
+
+:host /deep/ .mat-icon.mat-editing{
+    color: #e5c735;
+    margin-left: 5px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
 :host /deep/ .mat-chip.mat-standard-chip.mat-chip-selected.mat-primary{
     background-color: #e3e3e3;
     color: #000000;
@@ -114,4 +122,8 @@ table, :host /deep/ .mat-paginator-container{
 
 .existing-rules-body mat-panel-title{
     flex-grow: 0;
+}
+
+.rule-is-editing{
+    border: solid #e5c735;
 }

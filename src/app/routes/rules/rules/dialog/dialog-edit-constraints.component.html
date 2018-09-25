@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Clone Rule</h1>
+<div mat-dialog-content>
+  <p>Please select the application(s)</p>
+    <div class="row">
+        <div class="col-12">
+            <material-table-paginator-filter [dataSource]="dataSource" [selection]="selection" [pageSizeOptions]="[5,10,20]"></material-table-paginator-filter>
+        </div>
+    </div>
+  
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button (click)="onSave()" cdkFocusInitial>Ok</button>
+</div>

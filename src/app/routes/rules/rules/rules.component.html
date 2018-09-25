@@ -114,12 +114,13 @@
             <table mat-table [dataSource]="ruleDataSource" class="mat-rule-table">
                     <ng-container matColumnDef="code">
                     <th mat-header-cell *matHeaderCellDef> Rules </th>
-                    <td mat-cell *matCellDef="let rule;let parentIndex = index">
+                    <td mat-cell *matCellDef="let rule;let parentIndex = index" class="{{(rule.isEditing) ? 'rule-is-editing' : ''}}">
                         <mat-accordion>
-                            <mat-expansion-panel class="mat-elevation-z0" [expanded]="rule.expanded" >
-                                <mat-expansion-panel-header (click)="togglePanelOpen(rule)">
+                            <mat-expansion-panel class="mat-elevation-z0 " [expanded]="rule.expanded"  >
+                                <mat-expansion-panel-header (click)="togglePanelOpen(rule)" >
                                     <mat-panel-title>
-                                        {{rule.code}}
+                                        <mat-icon color="editing" *ngIf="rule.isEditing">edit</mat-icon>
+                                         {{rule.code}} 
                                     </mat-panel-title>
                                     <mat-panel-description>
                                         {{rule.description}}
@@ -141,6 +142,9 @@
                                                 <mat-chip color="{{rule.isEditing == false ? 'primary' : ''}}" selected *ngFor="let cons of constraint;let childIndex = index">
                                                     {{cons.name}}
                                                     <mat-icon color="primary" *ngIf="rule.isEditing" (click)="removeConstraint(rule,cons,childIndex)">cancel</mat-icon>
+                                                </mat-chip>
+                                                <mat-chip color="primary" *ngIf="rule.isEditing"  selected (click)="openDialogEditConstraints(constraint[0].type)" >
+                                                    Edit
                                                 </mat-chip>
                                             </mat-chip-list>
                                             </div>

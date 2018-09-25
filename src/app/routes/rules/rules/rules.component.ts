@@ -11,7 +11,8 @@ import { MaterialTableHelper } from '../../../common/service/material-table-help
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';
-import { DialogRuleCloneComponent } from '../rules/dialog/dialog-application-required.component';
+import { DialogRuleCloneComponent } from './dialog/dialog-rule-clone.component';
+import { DialogEditConstraintsComponent } from './dialog/dialog-edit-constraints.component';
 import { AlertDialogComponent } from '../../../common/dialog/alert/alert-dialog.component';
 
 
@@ -260,6 +261,13 @@ export class RulesComponent implements OnInit {
     }
 
     editRule(rule: Rule){
+        this.ruleDataSource.data.forEach( (_rule) => {
+            if(_rule.id != rule.id)
+            {
+                _rule.isEditing = false;
+                _rule.expanded = false;
+            }
+        });
         this.noEditedRule = _.cloneDeep(this.ruleDataSource.data);
         this.toggleEditeRule(rule);
     }
@@ -272,11 +280,6 @@ export class RulesComponent implements OnInit {
     }
     
     toggleEditeRule(rule){
-        console.log(this.ruleDataSource.data)
-        this.ruleDataSource.data.forEach( (_rule) => {
-            if(_rule.id != rule.id)
-            _rule.isEditing = false;
-        });
         rule.isEditing = !rule.isEditing
         this.toggleGeneralEditeRule();
     }
@@ -317,6 +320,36 @@ export class RulesComponent implements OnInit {
         });
     
        return dialogRef.afterClosed();
+    }
+
+    openDialogEditConstraints(dataSourceType): Observable<any> 
+    {
+        var dataSource;
+        switch(dataSourceType) {
+            case 'Segment':
+                dataSource = this.segmentDataSource.data;
+                break;
+            case 'Contract':
+                dataSource = this.contractDataSource.data;
+                break;
+            case 'Tax Id':
+                dataSource = this.taxIdDataSource.data;
+                break;
+            case 'PBP':
+                dataSource = this.pbpDataSource.data;
+                break;
+            case 'Measure':
+                dataSource = this.measureDataSource.data;
+                break;
+            case 'Application':
+                dataSource = this.applicationDataSource.data;
+                break;
+        }
+
+        return  this.dialog.open(DialogEditConstraintsComponent, {
+          width: '550px',
+          data: {dataSource: dataSource, dataSourceType: dataSourceType }
+        }).afterClosed();;
     }
 
     

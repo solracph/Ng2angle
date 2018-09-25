@@ -8,9 +8,9 @@ import { Application } from '../models/application.model';
 import { MaterialTableHelper } from '../../../../common/service/material-table-helper.service';
 
 @Component({
-    selector: 'dialog-application-required',
-    templateUrl: 'dialog-application-required.component.html',
-    styleUrls: ['dialog-application-required.component.scss']
+    selector: 'dialog-rule-clone',
+    templateUrl: 'dialog-rule-clone.component.html',
+    styleUrls: ['dialog-rule-clone.component.scss']
   })
   export class DialogRuleCloneComponent {
 

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RulesComponent } from './rules/rules.component';
-import { DialogRuleCloneComponent } from './rules/dialog/dialog-application-required.component';
+import { DialogRuleCloneComponent } from './rules/dialog/dialog-rule-clone.component';
+import { DialogEditConstraintsComponent } from './rules/dialog/dialog-edit-constraints.component';
 import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { RuleService } from './rules/rule.service';
@@ -17,8 +18,8 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         MaterialTablePaginatorFilterModule
     ],
-    declarations: [RulesComponent,DialogRuleCloneComponent, AlertDialogComponent],
-    entryComponents: [DialogRuleCloneComponent, AlertDialogComponent],
+    declarations: [RulesComponent,DialogRuleCloneComponent,DialogEditConstraintsComponent,AlertDialogComponent],
+    entryComponents: [DialogRuleCloneComponent,DialogEditConstraintsComponent, AlertDialogComponent],
     exports: [
         RouterModule
     ],
