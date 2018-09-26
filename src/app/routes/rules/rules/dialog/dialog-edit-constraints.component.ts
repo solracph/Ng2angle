@@ -1,9 +1,8 @@
 
-import { Component, ViewChild, Inject } from '@angular/core';
-import { MatPaginator,MatTableDataSource } from '@angular/material';
+import { Component, Inject } from '@angular/core';
+import {MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Application } from '../models/application.model';
 import { MaterialTableHelper } from '../../../../common/service/material-table-helper.service';
 
 @Component({
@@ -13,10 +12,9 @@ import { MaterialTableHelper } from '../../../../common/service/material-table-h
   })
   export class DialogEditConstraintsComponent {
 
-    @ViewChild('applicationPaginator') applicationPaginator: MatPaginator; 
 
-    public selection: SelectionModel<Application>; 
-    public dataSource: MatTableDataSource<Application>;
+    public selection: SelectionModel<any>; 
+    public dataSource: MatTableDataSource<any>;
     public headerCell: string;
     
     constructor(
@@ -28,9 +26,8 @@ import { MaterialTableHelper } from '../../../../common/service/material-table-h
 
     ngOnInit(){
         this.headerCell = this.data.headerCell;
-        this.dataSource = new MatTableDataSource<Application>(this.data.dataSource);
-        this.dataSource.paginator = this.applicationPaginator;
-        this.selection = new SelectionModel<Application>(true, this.data.selection);
+        this.dataSource = new MatTableDataSource<any>(this.data.dataSource);
+        this.selection = new SelectionModel<any>(true, this.data.selection);
     }
   
     onNoClick(): void {
@@ -43,7 +40,16 @@ import { MaterialTableHelper } from '../../../../common/service/material-table-h
 
     onSave(){
         if(this.selection.selected.length > 0){
-            this.dialogRef.close({ selection: this.selection,dataSource: this.dataSource});
+            var _selection;
+            if(this.selection.selected.length == this.dataSource.data.length){
+                _selection = new SelectionModel<any>(true, [{
+                    type: this.dataSource.data[0].type,
+                    name: "All"
+                }]);
+            }else{
+                _selection = this.selection;
+            }
+            this.dialogRef.close({ selection: _selection,dataSource: this.dataSource});
         }
     }
 

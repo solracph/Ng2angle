@@ -18,7 +18,7 @@ export class MaterialTablePaginatorFilter {
     @Input() selection: SelectionModel<any>;
     @Input() pageSizeOptions: Array<number>;
     @Input() headerCell: string;
-    @Output() selected = new EventEmitter<boolean>();
+    @Output() selected = new EventEmitter<any>();
     @ViewChild('paginator') paginator: MatPaginator; 
 
     public newFilterFormGroup: FormGroup;
@@ -35,7 +35,7 @@ export class MaterialTablePaginatorFilter {
             var selection = [];
             this.dataSource.data.forEach(element => {
                 this.selection.selected.forEach(selected => {
-                    if(element.id == selected.id){
+                    if(element.id == selected.id || selected.name == "All"){
                         selection.push(element)
                     }
                 })
@@ -49,8 +49,8 @@ export class MaterialTablePaginatorFilter {
         
     }
 
-    select(data){
-        this.selected.emit(data);
+    select(selection){
+        this.selected.emit(selection);
     }
 
     isAllSelected() {
