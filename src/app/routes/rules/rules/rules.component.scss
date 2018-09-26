@@ -15,8 +15,17 @@
     color: #fff !important;
 }
 
+:host /deep/ .mat-chip.mat-standard-chip.mat-chip-selected[ng-reflect-color="editing"]{
+    background-color: #e5c735 !important;
+    color: #fff !important;
+    cursor: pointer;
+    height: 30px;
+    width: 50px;
+    font-size: 16px;
+}
+
 :host /deep/ .mat-icon.mat-primary{
-    color: #E53935;
+    color: #cf3535;
     margin-left: 5px;
     cursor: pointer;
 }
@@ -24,6 +33,14 @@
 
 :host /deep/ .mat-icon.mat-editing{
     color: #e5c735;
+    margin-left: 5px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+
+:host /deep/ .mat-chip.mat-standard-chip.mat-chip-selected[ng-reflect-color="editing"] .mat-icon.mat-editing{
+    color: #fff;
     margin-left: 5px;
     cursor: pointer;
     font-size: 20px;

@@ -139,13 +139,14 @@
                                         <div class="col-lg-11">
                                             <div>
                                             <mat-chip-list>
+                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editConstraints(constraint[0].type,constraint,rule)" >
+                                                    <mat-icon color="editing">edit</mat-icon>
+                                                </mat-chip>
                                                 <mat-chip color="{{rule.isEditing == false ? 'primary' : ''}}" selected *ngFor="let cons of constraint;let childIndex = index">
                                                     {{cons.name}}
                                                     <mat-icon color="primary" *ngIf="rule.isEditing && constraint.length > 1" (click)="removeConstraint(rule,cons,childIndex)">cancel</mat-icon>
                                                 </mat-chip>
-                                                <mat-chip color="primary" *ngIf="rule.isEditing"  selected (click)="editConstraints(constraint[0].type,constraint,rule)" >
-                                                    Edit
-                                                </mat-chip>
+                                                
                                             </mat-chip-list>
                                             </div>
                                         </div>
