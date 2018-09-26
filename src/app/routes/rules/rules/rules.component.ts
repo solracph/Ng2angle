@@ -8,7 +8,7 @@ import { MatPaginator,MatTableDataSource, MatStepper } from '@angular/material';
 import { SelectionModel} from '@angular/cdk/collections';
 import { AppState } from '../../../app.state';
 import { MaterialTableHelper } from '../../../common/service/material-table-helper.service';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 import { DialogRuleCloneComponent } from './dialog/dialog-rule-clone.component';
@@ -413,8 +413,6 @@ export class RulesComponent implements OnInit {
           data: {dataSource: dataSource, dataSourceType: dataSourceType, headerCell:dataSourceType , selection: constraint}
         }).afterClosed();;
     }
-
-    
 
     ngOnDestroy() {
         this.cancelEditRule();
