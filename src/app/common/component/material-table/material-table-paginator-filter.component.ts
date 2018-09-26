@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, Output, EventEmitter, } from '@angular/core';
 import { MatPaginator,MatTableDataSource, MatStepper } from '@angular/material';
 import { SelectionModel} from '@angular/cdk/collections';
 import { MaterialTableHelper } from '../../service/material-table-helper.service';
@@ -17,9 +17,12 @@ export class MaterialTablePaginatorFilter {
     @Input() dataSource: MatTableDataSource<any> ;
     @Input() selection: SelectionModel<any>;
     @Input() pageSizeOptions: Array<number>;
+    @Input() headerCell: string;
+    @Output() selected = new EventEmitter<boolean>();
     @ViewChild('paginator') paginator: MatPaginator; 
 
     public newFilterFormGroup: FormGroup;
+
 
     constructor ( 
         public materialTableHelper: MaterialTableHelper,
@@ -28,17 +31,36 @@ export class MaterialTablePaginatorFilter {
 
     ngOnInit(){
 
+        if(this.selection.selected.length > 0){
+            var selection = [];
+            this.dataSource.data.forEach(element => {
+                this.selection.selected.forEach(selected => {
+                    if(element.id == selected.id){
+                        selection.push(element)
+                    }
+                })
+            });
+            this.selection = new SelectionModel<any>(true, selection);
+        }
         this.dataSource.paginator = this.paginator;
         this.newFilterFormGroup = this._formBuilder.group({
             descriptionCtrl:  ['',Validators.required]
         });
+        
+    }
+
+    select(data){
+        this.selected.emit(data);
     }
 
     isAllSelected() {
-        return this.materialTableHelper.isAllSelected(this.selection,this.dataSource)
+        this.select(this.selection);
+        return this.materialTableHelper.isAllSelected(this.selection,this.dataSource);
+        
     }
 
     masterToggle() {
+        this.select(this.selection);
         this.materialTableHelper.masterToggle(this.selection,this.dataSource);
     }
 

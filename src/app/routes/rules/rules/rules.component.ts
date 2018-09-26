@@ -133,7 +133,7 @@ export class RulesComponent implements OnInit {
         this.cancelEditRule();
 
         if(this.newRuleFormGroup.value.descriptionCtrl == ""){
-            this.openDialogDescriptionRequired();
+            this.openDialogRequired("Rule Description is required!");
             return;
         }
 
@@ -154,6 +154,9 @@ export class RulesComponent implements OnInit {
             } else {
                 newRule.constraints.push(this.segmentSelection.selected);
             }
+        }else{
+            this.openDialogRequired("Rule Segment is required!");
+            return;
         }
 
         if(this.contractSelection.selected.length > 0) {
@@ -165,6 +168,23 @@ export class RulesComponent implements OnInit {
             } else {
                 newRule.constraints.push(this.contractSelection.selected);
             }
+        }else{
+            this.openDialogRequired("Rule Contract is required!");
+            return;
+        }
+
+        if(this.pbpSelection.selected.length > 0){
+            if(this.pbpSelection.selected.length == this.pbpDataSource.data.length) {
+                newRule.constraints.push([{
+                    type: "PBP",
+                    name: "All"
+                }])
+            } else {
+                newRule.constraints.push(this.pbpSelection.selected);
+            }
+        }else{
+            this.openDialogRequired("Rule PBP Id is required!");
+            return;
         }
 
         if(this.taxIdSelection.selected.length > 0)
@@ -177,17 +197,9 @@ export class RulesComponent implements OnInit {
             } else {
                 newRule.constraints.push(this.taxIdSelection.selected);
             }
-        }
-
-        if(this.pbpSelection.selected.length > 0){
-            if(this.pbpSelection.selected.length == this.pbpDataSource.data.length) {
-                newRule.constraints.push([{
-                    type: "PBP",
-                    name: "All"
-                }])
-            } else {
-                newRule.constraints.push(this.pbpSelection.selected);
-            }
+        }else{
+            this.openDialogRequired("Rule Tax Id is required!");
+            return;
         }
         
         if(this.measureSelection.selected.length > 0){
@@ -199,6 +211,9 @@ export class RulesComponent implements OnInit {
             } else {
                 newRule.constraints.push(this.measureSelection.selected);
             }
+        }else{
+            this.openDialogRequired("Rule Measure Id is required!");
+            return;
         }
 
         if(this.applicationSelection.selected.length > 0){
@@ -211,6 +226,9 @@ export class RulesComponent implements OnInit {
             } else {
                 newRule.constraints.push(this.applicationSelection.selected);
             }
+        }else{
+            this.openDialogRequired("Rule Application Id is required!");
+            return;
         }
 
         this.ruleList.push(newRule);
@@ -276,7 +294,6 @@ export class RulesComponent implements OnInit {
         if(this.noEditedRule != undefined && this.isEditing == true)
         this.ruleDataSource.data = _.cloneDeep(this.noEditedRule);
         this.isEditing = false;
-       // this.toggleGeneralEditeRule();
     }
     
     toggleEditeRule(rule){
@@ -292,7 +309,7 @@ export class RulesComponent implements OnInit {
         this.isEditing = !this.isEditing
     }
 
-    removeConstraint(_rule: any,_constraint: Constraint,cindex) {
+    removeConstraint(_rule: any,_constraint: Constraint) {
         _rule.constraints.forEach((constraints: any) => {
            _.remove(constraints, (constraint: Constraint)=>{
                 if(constraint.type == _constraint.type && constraint.id == _constraint.id )
@@ -306,23 +323,42 @@ export class RulesComponent implements OnInit {
         })
     }
 
-    openDialogDescriptionRequired(): void {
+    openDialogRequired(message): void {
         this.dialog.open(AlertDialogComponent, {
           width: '250px',
-          data: { message: "Rule Description is required!"}
+          data: { message: message}
         });
     }
 
     openDialogRuleClone(rule: Rule): Observable<any> {
         const dialogRef = this.dialog.open(DialogRuleCloneComponent, {
           width: '550px',
-          data: {applicationDataSource: this.applicationDataSource.data,description: rule.description }
+          data: {applicationDataSource: this.applicationDataSource.data,description: rule.description, headerCell: "Application" }
         });
     
        return dialogRef.afterClosed();
     }
 
-    openDialogEditConstraints(dataSourceType): Observable<any> 
+    editConstraints(dataSourceType, constraint,rule){
+        this.openDialogEditConstraints(dataSourceType,constraint).subscribe((data) => {
+            if(data)
+            {
+                rule.constraints.forEach((constraints: any) => {
+                    if(constraints[0].type == data.selection.selected[0].type)
+                    {
+                       _.remove(constraints,(constraint) => {
+                            return constraint;
+                       })
+                       data.selection.selected.forEach(selected => {
+                            constraints.push(selected);
+                       });
+                    }
+                 });
+            }
+        });
+    }
+
+    openDialogEditConstraints(dataSourceType, constraint): Observable<any> 
     {
         var dataSource;
         switch(dataSourceType) {
@@ -348,7 +384,7 @@ export class RulesComponent implements OnInit {
 
         return  this.dialog.open(DialogEditConstraintsComponent, {
           width: '550px',
-          data: {dataSource: dataSource, dataSourceType: dataSourceType }
+          data: {dataSource: dataSource, dataSourceType: dataSourceType, headerCell:dataSourceType , selection: constraint}
         }).afterClosed();;
     }
 

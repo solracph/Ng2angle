@@ -18,6 +18,7 @@ import { MaterialTableHelper } from '../../../../common/service/material-table-h
 
     public applicationSelection: SelectionModel<Application> = new SelectionModel<Application>(true, []);
     public applicationDataSource: MatTableDataSource<Application> = new MatTableDataSource<Application>([]);
+    public headerCell: string;
     public clonedRuleFormGroup: FormGroup;
 
     
@@ -30,7 +31,7 @@ import { MaterialTableHelper } from '../../../../common/service/material-table-h
     
 
     ngOnInit(){
-
+        this.headerCell = this.data.headerCell;
         this.clonedRuleFormGroup = this._formBuilder.group({
             descriptionCtrl:  [this.data.description,Validators.required]
         });
