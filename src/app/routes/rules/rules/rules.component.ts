@@ -155,8 +155,12 @@ export class RulesComponent implements OnInit {
                 newRule.constraints.push(this.segmentSelection.selected);
             }
         }else{
-            this.openDialogRequired("Rule Segment is required!");
-            return;
+            newRule.constraints.push([{
+                type: "Segment",
+                name: "All"
+            }]);
+            /*this.openDialogRequired("Rule Segment is required!");
+            return;*/
         }
 
         if(this.contractSelection.selected.length > 0) {
@@ -169,8 +173,13 @@ export class RulesComponent implements OnInit {
                 newRule.constraints.push(this.contractSelection.selected);
             }
         }else{
-            this.openDialogRequired("Rule Contract is required!");
-            return;
+
+            newRule.constraints.push([{
+                type: "Contract",
+                name: "All"
+            }])
+            /*this.openDialogRequired("Rule Contract is required!");
+            return;*/
         }
 
         if(this.pbpSelection.selected.length > 0){
@@ -183,8 +192,12 @@ export class RulesComponent implements OnInit {
                 newRule.constraints.push(this.pbpSelection.selected);
             }
         }else{
-            this.openDialogRequired("Rule PBP Id is required!");
-            return;
+            newRule.constraints.push([{
+                type: "PBP",
+                name: "All"
+            }])
+            //this.openDialogRequired("Rule PBP Id is required!");
+            //return;
         }
 
         if(this.taxIdSelection.selected.length > 0)
@@ -198,8 +211,12 @@ export class RulesComponent implements OnInit {
                 newRule.constraints.push(this.taxIdSelection.selected);
             }
         }else{
-            this.openDialogRequired("Rule Tax Id is required!");
-            return;
+            newRule.constraints.push([{
+                type: "Tax Id",
+                name: "All"
+            }])
+            /*this.openDialogRequired("Rule Tax Id is required!");
+            return;*/
         }
         
         if(this.measureSelection.selected.length > 0){
@@ -212,8 +229,12 @@ export class RulesComponent implements OnInit {
                 newRule.constraints.push(this.measureSelection.selected);
             }
         }else{
-            this.openDialogRequired("Rule Measure Id is required!");
-            return;
+            newRule.constraints.push([{
+                type: "Measure",
+                name: "All"
+            }])
+            /*this.openDialogRequired("Rule Measure Id is required!");
+            return;*/
         }
 
         if(this.applicationSelection.selected.length > 0){
@@ -227,8 +248,13 @@ export class RulesComponent implements OnInit {
                 newRule.constraints.push(this.applicationSelection.selected);
             }
         }else{
-            this.openDialogRequired("Rule Application Id is required!");
-            return;
+            newRule.constraints.push([{
+                type: "Application",
+                code: "AP-1",
+                name: "All"
+            }])
+            /*this.openDialogRequired("Rule Application Id is required!");
+            return;*/
         }
 
         this.ruleList.push(newRule);
