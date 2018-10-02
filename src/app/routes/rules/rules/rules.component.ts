@@ -264,7 +264,7 @@ export class RulesComponent implements OnInit {
         this.stepperAndSelectionReset();
     }
 
-    cloneRule(i: number,rule: any){
+    cloneRule(rule: any){
 
         this.openDialogRuleClone(rule).subscribe((response : any) =>{
             if(response){
