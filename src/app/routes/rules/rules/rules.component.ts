@@ -109,7 +109,7 @@ export class RulesComponent implements OnInit {
             });
         });
 
-        if(selection.length == 0){
+        if(selection.length == 0 || selection[0].name == 'All'){
             newpbpList = [...this.ruleService.pbpList];
         }
 
@@ -376,10 +376,29 @@ export class RulesComponent implements OnInit {
            })
         });
 
-        _.remove(_rule.constraints,(constraint: any)=>{
+        _rule.constraints.forEach((constraints: any) => {
+            debugger
+            _.remove(constraints, (constraint: any)=>{
+                if(constraint.type == 'PBP' && constraint.contractName == _constraint.name ){
+                    return constraint;
+                }
+            })
+         });
+
+         _rule.constraints.forEach((constraints: any) => {
+            if(constraints.length == 0){
+                constraints.push({
+                    type: 'PBP',
+                    name: "All"
+                });
+            }
+         })
+       
+       /* _.remove(_rule.constraints,(constraint: any)=>{
             if(constraint.length == 0)
             return constraint;
-        })
+        })*/
+        
     }
 
     openDialogRequired(message): void {
@@ -398,8 +417,8 @@ export class RulesComponent implements OnInit {
        return dialogRef.afterClosed();
     }
 
-    editConstraints(dataSourceType, constraint,rule){
-        this.openDialogEditConstraints(dataSourceType,constraint,rule).subscribe((data) => {
+    editConstraints(dataSourceType, _constraint,rule){
+        this.openDialogEditConstraints(dataSourceType,_constraint,rule).subscribe((data) => {
             if(data)
             {
                 rule.constraints.forEach((constraints: any) => {
@@ -407,13 +426,47 @@ export class RulesComponent implements OnInit {
                     {
                        _.remove(constraints,(constraint) => {
                             return constraint;
-                       })
+                       });
+                       
                        data.selection.selected.forEach(selected => {
                             constraints.push(selected);
                        });
                     }
                  });
-            }
+
+                if(_constraint[0].type == 'Contract'){
+                    var newPbpList = [];
+
+                    data.selection.selected.forEach((selection: any) => {
+                       
+                       rule.constraints.forEach((constraints: any) => {
+
+                           if(constraints[0].type == 'PBP' && constraints[0].name != 'All'){
+                                constraints.forEach(constraint => {
+                                    if(constraint.contractName == selection.name ){
+                                        newPbpList.push(constraint);
+                                    }
+                                });
+
+                                _.remove(constraints,(constraint) => {
+                                    return constraint;
+                                });
+
+                                newPbpList.forEach(pbp => {
+                                    constraints.push(pbp);
+                                });
+
+                                if(newPbpList.length == 0) {
+                                    constraints.push({
+                                        type: 'PBP',
+                                        name: "All"
+                                    })
+                                }
+                           }
+                       });
+                    });
+                };
+            };
         });
     }
 
@@ -426,8 +479,6 @@ export class RulesComponent implements OnInit {
                 contractList.push(d)
             });
         })
-
-        console.log(contractList);
         
         var dataSource;
         switch(dataSourceType) {
@@ -441,7 +492,7 @@ export class RulesComponent implements OnInit {
                 dataSource = this.taxIdDataSource.data;
                 break;
             case 'PBP':
-                dataSource = this.filteringPbpDataSource(contractList)//this.pbpDataSource.data;
+                dataSource = this.filteringPbpDataSource(contractList)
                 break;
             case 'Measure':
                 dataSource = this.measureDataSource.data;
