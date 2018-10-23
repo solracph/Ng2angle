@@ -18,7 +18,7 @@ export class MaterialTablePaginatorFilter {
     @Input() selection: SelectionModel<any>;
     @Input() pageSizeOptions: Array<number>;
     @Input() headerCell: string;
-    @Output() selected = new EventEmitter<any>();
+    @Output() selected: EventEmitter<any> = new EventEmitter();
     @ViewChild('paginator') paginator: MatPaginator; 
 
     public newFilterFormGroup: FormGroup;
@@ -43,6 +43,7 @@ export class MaterialTablePaginatorFilter {
             this.selection = new SelectionModel<any>(true, selection);
         }
         this.dataSource.paginator = this.paginator;
+
         this.newFilterFormGroup = this._formBuilder.group({
             descriptionCtrl:  ['',Validators.required]
         });

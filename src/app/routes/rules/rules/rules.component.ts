@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Rule } from '../../../common/model/rule.model';
 import { Constraint } from '../../../common/model/constraint.model';
 import { Application } from '../../../common/model/application.model';
+import { Pbp } from '../../../common/model/pbp.model';
 import { RuleService } from './rule.service';
 import { MatPaginator,MatTableDataSource, MatStepper } from '@angular/material';
 import { SelectionModel} from '@angular/cdk/collections';
@@ -31,13 +32,13 @@ export class RulesComponent implements OnInit {
         public dialog: MatDialog
     ) {}
 
-    @ViewChild('segmentPaginator') segmentPaginator: MatPaginator; 
+    /*@ViewChild('segmentPaginator') segmentPaginator: MatPaginator; 
     @ViewChild('contractPaginator') contractPaginator: MatPaginator;
     @ViewChild('pbpPaginator') pbpPaginator: MatPaginator;
     @ViewChild('taxIdPaginator') taxIdPaginator: MatPaginator;
     @ViewChild('measurePaginator') measurePaginator: MatPaginator;
     @ViewChild('applicationPaginator') applicationPaginator: MatPaginator; 
-    @ViewChild('rulePaginator') rulePaginator: MatPaginator;
+    @ViewChild('rulePaginator') rulePaginator: MatPaginator;*/
     @ViewChild('stepper') stepper: MatStepper;
 
     public newRuleFormGroup: FormGroup;
@@ -52,8 +53,8 @@ export class RulesComponent implements OnInit {
     public contractDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Constraint>(this.ruleService.contractList);
     public contractSelection: SelectionModel<Constraint>= new SelectionModel<Constraint>(true, []);
 
-    public pbpDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Constraint>(this.ruleService.pbpList);
-    public pbpSelection: SelectionModel<Constraint> = new SelectionModel<Constraint>(true, []);
+    public pbpDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Pbp>(this.ruleService.pbpList);
+    public pbpSelection: SelectionModel<Constraint> = new SelectionModel<Pbp>(true, []);
 
     public taxIdDataSource: MatTableDataSource<Constraint> = new MatTableDataSource<Constraint>(this.ruleService.taxIdList);
     public taxIdSelection: SelectionModel<Constraint> = new SelectionModel<Constraint>(true, []);
@@ -73,27 +74,59 @@ export class RulesComponent implements OnInit {
             this.updateRuleDataSource(rule);
         });
         
-        this.segmentDataSource.paginator = this.segmentPaginator;
+        /*this.segmentDataSource.paginator = this.segmentPaginator;
         this.contractDataSource.paginator = this.contractPaginator;
         this.pbpDataSource.paginator = this.pbpPaginator;
         this.taxIdDataSource.paginator = this.taxIdPaginator;
         this.measureDataSource.paginator = this.measurePaginator;
         this.applicationDataSource.paginator = this.applicationPaginator;
-        this.ruleDataSource.paginator = this.rulePaginator;
+        this.ruleDataSource.paginator = this.rulePaginator;*/
 
         this.newRuleFormGroup = this._formBuilder.group({
             descriptionCtrl:  ['',Validators.required]
         });
+
+        this.contractSelection.onChange.subscribe((data) => {
+            var newpbpList = [];
+
+            newpbpList = this.filteringPbpDataSource(data.source.selected)
+
+            this.pbpDataSource.data = [...newpbpList];
+            this.pbpSelection.clear();
+
+        })
+    }
+
+    filteringPbpDataSource(selection){
+        
+        var newpbpList = [];
+
+        selection.forEach(contract => {
+            this.ruleService.pbpList.forEach(pbp => {
+                if(pbp.contractId == contract.id){
+                    newpbpList.push(pbp)
+                }
+            });
+        });
+
+        if(selection.length == 0){
+            newpbpList = [...this.ruleService.pbpList];
+        }
+
+        return [...newpbpList];
     }
 
    
 
-    isAllSelected(selection,dataSource) {
+   /* isAllSelected(selection,dataSource) {
         return this.materialTableHelper.isAllSelected(selection,dataSource)
     }
 
     masterToggle(selection,dataSource) {
         this.materialTableHelper.masterToggle(selection,dataSource);
+    }*/
+
+    onContractSelect(e){
     }
 
     applyFilter(filterValue: string, dataSource) {
@@ -105,12 +138,12 @@ export class RulesComponent implements OnInit {
     }
 
     selectionReset() {
-        this.segmentSelection =  new SelectionModel<Constraint>(true, []);
-        this.contractSelection = new SelectionModel<Constraint>(true, []);
-        this.taxIdSelection = new SelectionModel<Constraint>(true, []);
-        this.pbpSelection = new SelectionModel<Constraint>(true, []);
-        this.measureSelection = new SelectionModel<Constraint>(true, []);
-        this.applicationSelection = new SelectionModel<Application>(true, []);
+        this.segmentSelection.clear();
+        this.contractSelection.clear();
+        this.taxIdSelection.clear();
+        this.pbpSelection.clear();
+        this.measureSelection.clear();
+        this.applicationSelection.clear();
     }
 
     stepperAndSelectionReset() {
@@ -183,7 +216,7 @@ export class RulesComponent implements OnInit {
         }
 
         if(this.pbpSelection.selected.length > 0){
-            if(this.pbpSelection.selected.length == this.pbpDataSource.data.length) {
+            if(this.pbpSelection.selected.length == this.ruleService.pbpList.length) {
                 newRule.constraints.push([{
                     type: "PBP",
                     name: "All"
@@ -366,7 +399,7 @@ export class RulesComponent implements OnInit {
     }
 
     editConstraints(dataSourceType, constraint,rule){
-        this.openDialogEditConstraints(dataSourceType,constraint).subscribe((data) => {
+        this.openDialogEditConstraints(dataSourceType,constraint,rule).subscribe((data) => {
             if(data)
             {
                 rule.constraints.forEach((constraints: any) => {
@@ -384,8 +417,18 @@ export class RulesComponent implements OnInit {
         });
     }
 
-    openDialogEditConstraints(dataSourceType, constraint): Observable<any> 
+    openDialogEditConstraints(dataSourceType, constraint, rule): Observable<any> 
     {
+       var contractList = [];
+        rule.constraints.forEach(constraint => {
+            constraint.forEach(d => {
+                if(d.type == 'Contract' )
+                contractList.push(d)
+            });
+        })
+
+        console.log(contractList);
+        
         var dataSource;
         switch(dataSourceType) {
             case 'Segment':
@@ -398,7 +441,7 @@ export class RulesComponent implements OnInit {
                 dataSource = this.taxIdDataSource.data;
                 break;
             case 'PBP':
-                dataSource = this.pbpDataSource.data;
+                dataSource = this.filteringPbpDataSource(contractList)//this.pbpDataSource.data;
                 break;
             case 'Measure':
                 dataSource = this.measureDataSource.data;
