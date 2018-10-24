@@ -1,14 +1,19 @@
 <mat-form-field>
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    <input matInput [(ngModel)]="filter" (keyup)="applyFilter($event.target.value)" placeholder="Filter">
 </mat-form-field>
 <table mat-table [dataSource]="dataSource">
         <!-- Checkbox Column -->
         <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox 
+            <mat-checkbox *ngIf="!filter"
                 (change)="$event ? masterToggle($event) : null"
                 [checked]="selection.hasValue() && isAllSelected()"
                 [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+            <mat-checkbox  *ngIf="filter"
+                (change)="$event ? selectfilterValue() : null"
+                [checked]="selection.hasValue() && isAllFilterValueSelected()"
+                [indeterminate]="selection.hasValue() && !isAllFilterValueSelected()">
             </mat-checkbox>
             </th>
             <td mat-cell *matCellDef="let row">

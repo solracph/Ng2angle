@@ -60,6 +60,18 @@ export class MaterialTablePaginatorFilter {
         
     }
 
+    selectfilterValue(value){
+        this.materialTableHelper.selectfilterValue(this.selection,this.dataSource);
+    }
+
+    deselectfilterValue(){
+        this.materialTableHelper.deselectfilterValue(this.selection);
+    }
+
+    isAllFilterValueSelected(){
+        return this.materialTableHelper.isAllFilterValueSelected(this.selection,this.dataSource);
+    }
+
     masterToggle() {
         this.select(this.selection);
         this.materialTableHelper.masterToggle(this.selection,this.dataSource);

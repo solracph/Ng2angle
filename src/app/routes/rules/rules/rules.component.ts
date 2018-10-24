@@ -144,6 +144,8 @@ export class RulesComponent implements OnInit {
         this.pbpSelection.clear();
         this.measureSelection.clear();
         this.applicationSelection.clear();
+
+        this.pbpDataSource.filteredData = [];
     }
 
     stepperAndSelectionReset() {
