@@ -50,7 +50,21 @@ export
         {id: 29, name: '029', type: "PBP", contractId: 4, contractName: 'R5420'},
         {id: 30, name: '030', type: "PBP", contractId: 4, contractName: 'R5420'},
         {id: 31, name: '031', type: "PBP", contractId: 5, contractName: 'R7444'},
-        {id: 32, name: '032', type: "PBP", contractId: 5, contractName: 'R7444'}
+        {id: 32, name: '032', type: "PBP", contractId: 5, contractName: 'R7444'},
+        {id: 33, name: '033', type: "PBP", contractId: 5, contractName: 'R7444'},
+        {id: 34, name: '034', type: "PBP", contractId: 5, contractName: 'R7444'},
+        {id: 35, name: '035', type: "PBP", contractId: 5, contractName: 'R7444'},
+        {id: 36, name: '036', type: "PBP", contractId: 5, contractName: 'R7444'},
+        {id: 37, name: '037', type: "PBP", contractId: 5, contractName: 'R7444'},
+        {id: 38, name: '038', type: "PBP", contractId: 5, contractName: 'R7444'},
+        {id: 39, name: '039', type: "PBP", contractId: 5, contractName: 'R7444'},
+        {id: 40, name: '040', type: "PBP", contractId: 5, contractName: 'R7444'},
+        {id: 41, name: '041', type: "PBP", contractId: 5, contractName: 'R7444'},
+        {id: 42, name: '042', type: "PBP", contractId: 5, contractName: 'R7444'},
+        {id: 43, name: '043', type: "PBP", contractId: 5, contractName: 'R7444'},
+        {id: 44, name: '044', type: "PBP", contractId: 5, contractName: 'R7444'},
+        {id: 45, name: '045', type: "PBP", contractId: 5, contractName: 'R7444'}
+
     ]
 
     public taxIdList: Constraint[] = [
