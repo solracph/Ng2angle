@@ -22,6 +22,7 @@ export class MaterialTablePaginatorFilter {
     @ViewChild('paginator') paginator: MatPaginator; 
 
     public newFilterFormGroup: FormGroup;
+    public filter;
 
 
     constructor ( 
