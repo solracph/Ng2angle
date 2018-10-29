@@ -6,15 +6,15 @@ export const routes = [
         path: '',
         component: LayoutComponent,
         children: [
-            { path: '', redirectTo: 'home', pathMatch: 'full' },
+            { path: '', redirectTo: 'rules', pathMatch: 'full' },
             { path: 'home', loadChildren: './home/home.module#HomeModule' },
-            { path: 'admin', loadChildren: './admin/admin.module#AdminModule' },
+            { path: 'rules-asigments', loadChildren: './admin/admin.module#AdminModule' },
             { path: 'rules', loadChildren: './rules/rules.module#RulesModule' },
             { path: 'material', loadChildren: './material/material.module#MaterialModule' },
         ]
     },
 
     // Not found
-    { path: '**', redirectTo: 'home' }
+    { path: '**', redirectTo: 'rules' }
 
 ];

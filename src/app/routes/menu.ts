@@ -1,13 +1,13 @@
 
-const Home = {
+/*const Home = {
     text: 'Home',
     link: '/home',
     icon: 'icon-home'
-};
+};*/
 
 const Admin = {
-    text: 'Admin',
-    link: '/admin',
+    text: 'Rules Asigments',
+    link: '/rules-asigments',
     icon: 'icon-settings'
 };
 
@@ -69,8 +69,8 @@ const headingMain = {
 
 export const menu = [
     headingMain,
-    Home,
+   // Home,
     Admin,
-    Rules,
-    Material
+    Rules
+   // Material
 ];
