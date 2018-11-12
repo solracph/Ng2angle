@@ -31,12 +31,11 @@ export class MaterialTablePaginatorFilter {
     ) {}
 
     ngOnInit(){
-
         if(this.selection.selected.length > 0){
             var selection = [];
             this.dataSource.data.forEach(element => {
                 this.selection.selected.forEach(selected => {
-                    if(element.id == selected.id || selected.name == "All"){
+                    if(element[`${Object.getOwnPropertyNames(element)[0]}`] == selected[`${Object.getOwnPropertyNames(selected)[0]}`] || selected.name == "All"){
                         selection.push(element)
                     }
                 })

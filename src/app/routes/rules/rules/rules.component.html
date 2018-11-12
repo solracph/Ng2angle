@@ -128,32 +128,148 @@
                                <mat-form-field class="example-half-width" *ngIf="rule.isEditing">
                                     <textarea  matInput placeholder="Rule Description"  [(ngModel)]="rule.description" ></textarea>
                                 </mat-form-field>
-                                <mat-chip-list  *ngFor="let constraint of rule.constraints">
+                                <mat-chip-list>
                                     <div class="row">
                                         <div class="col-lg-1">
                                             <div class="constraint-name-container">
-                                                <span>{{constraint[0] != undefined ? constraint[0].type : ''}} </span>
+                                                <span>Segments</span>
                                             </div>
                                         </div>
                                         <div class="col-lg-11">
                                             <div>
                                             <mat-chip-list>
-                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editConstraints(constraint[0].type,constraint,rule)" >
+                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editConstraints('Segment',rule.segments,rule)" >
                                                     <mat-icon color="editing">edit</mat-icon>
                                                 </mat-chip>
                                                 
-                                                <mat-chip color="{{rule.isEditing == false ? 'primary' : ''}}" selected *ngFor="let cons of constraint;let childIndex = index">
-                                                    {{cons.name}}  {{cons.contractName != undefined ? ('-') : ''}} {{cons.contractName}}
-                                                    <mat-icon color="primary" *ngIf="rule.isEditing && constraint.length > 1" (click)="removeConstraint(rule,cons,childIndex)">cancel</mat-icon>
+                                                <mat-chip color="{{rule.isEditing == false ? 'primary' : ''}}" selected *ngFor="let cons of rule.segments">
+                                                    {{cons.description}}  {{cons.contractName != undefined ? ('-') : ''}} {{cons.contractName}}
+                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.segments.length > 1" (click)="removeSegmentsConstraint(rule,cons)">cancel</mat-icon>
                                                 </mat-chip>
                                             </mat-chip-list>
                                             </div>
                                         </div>
                                     </div>
                                 </mat-chip-list>
+                                <mat-chip-list>
+                                    <div class="row">
+                                        <div class="col-lg-1">
+                                            <div class="constraint-name-container">
+                                                <span>Contracts</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-11">
+                                            <div>
+                                            <mat-chip-list>
+                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editConstraints('Contract',rule.contracts,rule)" >
+                                                    <mat-icon color="editing">edit</mat-icon>
+                                                </mat-chip>
+                                                
+                                                <mat-chip color="{{rule.isEditing == false ? 'primary' : ''}}" selected *ngFor="let cons of rule.contracts;let childIndex = index">
+                                                    {{cons.description}}  {{cons.contractName != undefined ? ('-') : ''}} {{cons.contractName}}
+                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.contracts.length > 1" (click)="removeContractsConstraint(rule,cons)">cancel</mat-icon>
+                                                </mat-chip>
+                                            </mat-chip-list>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-chip-list>
+                                <mat-chip-list>
+                                    <div class="row">
+                                        <div class="col-lg-1">
+                                            <div class="constraint-name-container">
+                                                <span>PBP</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-11">
+                                            <div>
+                                            <mat-chip-list>
+                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editConstraints('PBP',rule.pbp,rule)" >
+                                                    <mat-icon color="editing">edit</mat-icon>
+                                                </mat-chip>
+                                                
+                                                <mat-chip color="{{rule.isEditing == false ? 'primary' : ''}}" selected *ngFor="let cons of rule.pbp;let childIndex = index">
+                                                    {{cons.description}}  {{cons.contractName != undefined ? ('-') : ''}} {{cons.contractName}}
+                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.pbp.length > 1" (click)="removePbpConstraint(rule,cons)">cancel</mat-icon>
+                                                </mat-chip>
+                                            </mat-chip-list>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-chip-list>
+                                <mat-chip-list>
+                                    <div class="row">
+                                        <div class="col-lg-1">
+                                            <div class="constraint-name-container">
+                                                <span>TaxId</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-11">
+                                            <div>
+                                            <mat-chip-list>
+                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editConstraints('TaxId',rule.tin,rule)" >
+                                                    <mat-icon color="editing">edit</mat-icon>
+                                                </mat-chip>
+                                                
+                                                <mat-chip color="{{rule.isEditing == false ? 'primary' : ''}}" selected *ngFor="let cons of rule.tin;let childIndex = index">
+                                                    {{cons.description}}  {{cons.contractName != undefined ? ('-') : ''}} {{cons.contractName}}
+                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.tin.length > 1" (click)="removeTinConstraint(rule,cons)">cancel</mat-icon>
+                                                </mat-chip>
+                                            </mat-chip-list>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-chip-list>
+                                <mat-chip-list>
+                                    <div class="row">
+                                        <div class="col-lg-1">
+                                            <div class="constraint-name-container">
+                                                <span>Measures</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-11">
+                                            <div>
+                                            <mat-chip-list>
+                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editConstraints('Measure',rule.measures,rule)" >
+                                                    <mat-icon color="editing">edit</mat-icon>
+                                                </mat-chip>
+                                                
+                                                <mat-chip color="{{rule.isEditing == false ? 'primary' : ''}}" selected *ngFor="let cons of rule.measures;let childIndex = index">
+                                                    {{cons.description}}  {{cons.contractName != undefined ? ('-') : ''}} {{cons.contractName}}
+                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.measures.length > 1" (click)="removeMeasureConstraint(rule,cons)">cancel</mat-icon>
+                                                </mat-chip>
+                                            </mat-chip-list>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-chip-list>
+                                <mat-chip-list>
+                                    <div class="row">
+                                        <div class="col-lg-1">
+                                            <div class="constraint-name-container">
+                                                <span>Applications</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-11">
+                                            <div>
+                                            <mat-chip-list>
+                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editConstraints('Application',rule.applications,rule)" >
+                                                    <mat-icon color="editing">edit</mat-icon>
+                                                </mat-chip>
+                                                
+                                                <mat-chip color="{{rule.isEditing == false ? 'primary' : ''}}" selected *ngFor="let cons of rule.applications;let childIndex = index">
+                                                    {{cons.description}}  {{cons.contractName != undefined ? ('-') : ''}} {{cons.contractName}}
+                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.applications.length > 1" (click)="removeApplicationConstraint(rule,cons)">cancel</mat-icon>
+                                                </mat-chip>
+                                            </mat-chip-list>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-chip-list>
+                                
 
                                 <div class="mat-button-container">
-                                    <button mat-button class="btn btn-danger mb-2" *ngIf="!rule.isEditing && !isEditing"  (click)="removeRow(parentIndex,ruleDataSource)">
+                                    <button mat-button class="btn btn-danger mb-2" *ngIf="!rule.isEditing && !isEditing"  (click)="removeRow(parentIndex,ruleDataSource,rule)">
                                         Delete
                                     </button>
                                     <button mat-button class="btn mat-button mb-2" *ngIf="!rule.isEditing && !isEditing" (click)="cloneRule(rule)">
@@ -165,7 +281,7 @@
                                     <button mat-button class="btn mat-button mb-2" *ngIf="rule.isEditing" (click)="cancelEditRule(parentIndex,childIndex)">
                                         Cancel
                                     </button>
-                                    <button mat-button class="btn mat-button mb-2" *ngIf="rule.isEditing" (click)="toggleEditeRule(rule)">
+                                    <button mat-button class="btn mat-button mb-2" *ngIf="rule.isEditing" (click)="saveUpdateRule(rule)">
                                         Save
                                     </button>
                                 </div>

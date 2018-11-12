@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator,MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Application } from '../models/application.model';
+import { Application } from '../../../../common/model/application.model';
 import { MaterialTableHelper } from '../../../../common/service/material-table-helper.service';
 
 @Component({

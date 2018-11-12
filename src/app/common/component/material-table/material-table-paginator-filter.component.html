@@ -25,13 +25,13 @@
             </td>
         </ng-container>
         
-        <ng-container matColumnDef="name">
+        <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef> {{headerCell}} </th>
-            <td mat-cell *matCellDef="let element"> {{element.name}} {{element.contractName != undefined ? ('-') : ''}} {{element.contractName}}</td>
+            <td mat-cell *matCellDef="let element"> {{element.description}} {{element.contracts != undefined ? '(' + element.contracts[0].description + ')': ''}}</td>
         </ng-container>
         
-        <tr mat-header-row *matHeaderRowDef="['select','name']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['select','name'];"
+        <tr mat-header-row *matHeaderRowDef="['select','description']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['select','description'];"
             (click)="selection.toggle(row)">
         </tr>
 </table>

@@ -5,6 +5,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
+import { AppConfiguration } from './app.configuration';
 import { AppComponent } from './app.component';
 import { AppState } from './app.state';
 
@@ -42,7 +43,8 @@ export function createTranslateLoader(http: HttpClient) {
     ],
     providers: [
         AppState,
-        MaterialTableHelper
+        MaterialTableHelper,
+        AppConfiguration
     ],
     bootstrap: [AppComponent]
 })

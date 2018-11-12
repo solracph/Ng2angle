@@ -52,7 +52,9 @@ export class AdminComponent implements OnInit {
 
     ngOnInit() {
         this.appState.userList = this.adminService.getUsers();
-        this.applicationList = this.ruleService.applicationList;
+        this.ruleService.getApplications().subscribe((data)=>{
+            this.applicationList = data.values;
+        });
         this.ruleList = this.appState.ruleList == undefined ? [] : this.appState.ruleList; 
 
         this.ruleList.forEach(rule => {
