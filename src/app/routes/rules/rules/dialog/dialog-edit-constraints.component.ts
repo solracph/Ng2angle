@@ -41,14 +41,14 @@ import { MaterialTableHelper } from '../../../../common/service/material-table-h
     onSave(){
         if(this.selection.selected.length > 0){
             var _selection;
-            if(this.selection.selected.length == this.dataSource.data.length){
+            /*if(this.selection.selected.length == this.dataSource.data.length){
                 _selection = new SelectionModel<any>(true, [{
                     type: this.dataSource.data[0].type,
                     name: "All"
-                }]);
-            }else{
+                }]);*/
+            /*}else{*/
                 _selection = this.selection;
-            }
+            /*}*/
             this.dialogRef.close({ selection: _selection,dataSource: this.dataSource});
         }
     }

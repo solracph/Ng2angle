@@ -64,7 +64,6 @@ export class RulesComponent implements OnInit {
     ngOnInit() {
 
         this.ruleService.getRules().subscribe((data)=>{
-            data.value[0].isEditing = false;
             this.ruleDataSource.data = data.value;
         })
 
@@ -207,156 +206,54 @@ export class RulesComponent implements OnInit {
             //isEditing: false,
             Description: this.newRuleFormGroup.value.descriptionCtrl,
         }
-
-        //if(this.segmentSelection.selected.length > 0) {
-            /*if(this.segmentSelection.selected.length == this.segmentDataSource.data.length){
-                newRule.constraints.push([{
-                    type: "Segment",
-                    name: "All"
-                }])
-            } else {*/
-                newRule.Segments = this.segmentSelection.selected;
-           /* }*/
-        /*}else{
-            newRule.constraints.push([{
-                type: "Segment",
-                name: "All"
-            }]);
-        }*/
-
-        /*if(this.contractSelection.selected.length > 0) {
-            if(this.contractSelection.selected.length == this.contractDataSource.data.length){
-                newRule.constraints.push([{
-                    type: "Contract",
-                    name: "All"
-                }])
-            } else {*/
-                newRule.Contracts = this.contractSelection.selected;
-       /*     }
-        }else{
-
-            newRule.constraints.push([{
-                type: "Contract",
-                name: "All"
-            }])
-        }*/
-
-        /*if(this.pbpSelection.selected.length > 0){
-            if(this.pbpSelection.selected.length == this.ruleService.pbpList.length) {
-                newRule.constraints.push([{
-                    type: "PBP",
-                    name: "All"
-                }])
-            } else {*/
-                var pbpToInsert = [];
-                this.pbpSelection.selected.forEach((pbp: any )=> {
-                    pbpToInsert.push({pbpId: pbp.pbpId})
-                });
-                newRule.Pbp = pbpToInsert;
-        /*    }
-        }else{
-            newRule.constraints.push([{
-                type: "PBP",
-                name: "All"
-            }])
-        }*/
-
-        /*if(this.taxIdSelection.selected.length > 0)
-        {
-            if(this.taxIdSelection.selected.length == this.taxIdDataSource.data.length) {
-                newRule.constraints.push([{
-                    type: "Tax Id",
-                    name: "All"
-                }])
-            } else {*/
-                newRule.Tin = this.taxIdSelection.selected;
-         /*   }
-        }else{
-            newRule.constraints.push([{
-                type: "Tax Id",
-                name: "All"
-            }])
-        }*/
         
-       /* if(this.measureSelection.selected.length > 0){
-            if(this.measureSelection.selected.length == this.measureDataSource.data.length) {
-                newRule.constraints.push([{
-                    type: "Measure",
-                    name: "All"
-                }])
-            } else {*/
-                newRule.Measures = this.measureSelection.selected;
-        /*    }
-        }else{
-            newRule.constraints.push([{
-                type: "Measure",
-                name: "All"
-            }])
-        }*/
+        newRule.Segments = this.segmentSelection.selected;
+        newRule.Contracts = this.contractSelection.selected;
 
-        /*if(this.applicationSelection.selected.length > 0){
-            if(this.applicationSelection.selected.length == this.applicationDataSource.data.length) {
-                newRule.constraints.push([{
-                    type: "Application",
-                    code: "AP-1",
-                    name: "All"
-                }])
-            } else {*/
-                newRule.Applications= this.applicationSelection.selected;
-        /*    }
-        }else{
-            newRule.constraints.push([{
-                type: "Application",
-                code: "AP-1",
-                name: "All"
-            }])
-        }*/
-
+        var pbpToInsert = [];
+        this.pbpSelection.selected.forEach((pbp: any )=> {
+            pbpToInsert.push({pbpId: pbp.pbpId})
+        });
+        newRule.Pbp = pbpToInsert;
+        newRule.Tin = this.taxIdSelection.selected;
+        newRule.Measures = this.measureSelection.selected;
+        newRule.Applications= this.applicationSelection.selected;
         
         this.ruleService.createNewRules(newRule).subscribe((data)=>{
-            this.ruleList.push(newRule);
-            this.appState.ruleList = this.ruleList;
-            this.updateRuleDataSource(newRule)
-            this.stepperAndSelectionReset();
+            if(data.success)
+            {
+                this.ruleList.push(newRule);
+                this.appState.ruleList = this.ruleList;
+                this.updateRuleDataSource(newRule)
+                this.stepperAndSelectionReset();
+            }
         });
-        
     }
 
     cloneRule(rule: any){
 
         this.openDialogRuleClone(rule).subscribe((response : any) =>{
-            if(response){
-                this.appState.rulId++;
+            if(response)
+            {
+                rule.applications = response.applicationSelection.selected;
+                rule.description = response.description;
+                var pbpToInsert = [];
+                rule.pbp.forEach((pbp: any )=> {
+                    pbpToInsert.push({pbpId: pbp.pbpId})
+                });
+                rule.pbp = pbpToInsert;
 
-                var newConstraints = [];
-                rule.constraints.forEach(constraint => {
-                    if(_.find(constraint,["type","Application"]) == undefined){
-                        newConstraints.push(constraint)
+                this.ruleService.createNewRules(rule).subscribe((data)=>{
+                    if(data.success)
+                    {
+                        this.ruleService.getRules().subscribe((data)=>{
+                            if(data.success)
+                            {
+                                this.ruleDataSource.data = data.value;
+                            }
+                        });
                     }
                 });
-
-                if(response.applicationSelection.selected.length == this.ruleService.applicationList.length){
-                    newConstraints.push([{
-                        type: "Application",
-                        code: "AP-1",
-                        name: "All"
-                    }]);
-                }else{
-                    newConstraints.push(response.applicationSelection.selected);
-                }
-                
-
-                var _rule = {
-                    id: this.appState.rulId,
-                    code: `R${this.appState.rulId}`,
-                    constraints: newConstraints,
-                    description: response.description,
-                    isEditing: false
-                }
-        
-                this.updateRuleDataSource(_.cloneDeep(_rule));
-                this.ruleList.push(_rule);
-                this.appState.ruleList = this.ruleList;
             }
         });
         
@@ -404,33 +301,6 @@ export class RulesComponent implements OnInit {
         this.isEditing = !this.isEditing
     }
 
-    /*removeConstraint(_rule: any,_constraint: Constraint) {
-        debugger
-        _rule.constraints.forEach((constraints: any) => {
-           _.remove(constraints, (constraint: Constraint)=>{
-                if(constraint.type == _constraint.type && constraint.id == _constraint.id )
-                return constraint;
-           })
-        });
-
-        _rule.constraints.forEach((constraints: any) => {
-            _.remove(constraints, (constraint: any)=>{
-                if(constraint.type == 'PBP' && constraint.contractName == _constraint.description ){
-                    return constraint;
-                }
-            })
-         });
-
-         _rule.constraints.forEach((constraints: any) => {
-            if(constraints.length == 0){
-                constraints.push({
-                    type: 'PBP',
-                    name: "All"
-                });
-            }
-         })
-    }*/
-
     removeSegmentsConstraint(rule: any,segment: any) {
         _.remove(rule.segments, (constraint: any)=>{
             if(constraint.segmentId == segment.segmentId )
@@ -450,6 +320,21 @@ export class RulesComponent implements OnInit {
             if(constraint.contractId == contract.contractId )
             return constraint;
         });
+
+        _.remove(rule.pbp,(pbp) => {
+            return pbp;
+        });
+
+        rule.contracts.forEach(contract => {
+            this.ruleService.pbpList.forEach(pbp => {
+                pbp.contracts.forEach(pbpContracts =>{
+                    if(pbpContracts.contractId == contract.contractId)
+                    rule.pbp.push(pbp);
+                })
+                
+            })
+        });
+        
     }
 
     removeTinConstraint(rule: any,tin: any) {
@@ -489,58 +374,112 @@ export class RulesComponent implements OnInit {
        return dialogRef.afterClosed();
     }
 
-    editConstraints(dataSourceType, _constraint,rule){
+    editRuleSegments(dataSourceType, _constraint,rule){
         this.openDialogEditConstraints(dataSourceType,_constraint,rule).subscribe((data) => {
             if(data)
             {
-                rule.constraints.forEach((constraints: any) => {
-                    if(constraints[0].type == data.selection.selected[0].type)
-                    {
-                       _.remove(constraints,(constraint) => {
-                            return constraint;
-                       });
-                       
-                       data.selection.selected.forEach(selected => {
-                            constraints.push(selected);
-                       });
-                    }
-                 });
+                _.remove(rule.segments,(segment) => {
+                    return segment;
+                });
 
-                if(_constraint[0].type == 'Contract'){
-                    var newPbpList = [];
+                data.selection.selected.forEach(selected => {
+                    rule.segments.push(selected);
+                });
 
-                    data.selection.selected.forEach((selection: any) => {
-                       
-                       rule.constraints.forEach((constraints: any) => {
-
-                           if(constraints[0].type == 'PBP' && constraints[0].name != 'All'){
-                                constraints.forEach(constraint => {
-                                    if(constraint.contractName == selection.name ){
-                                        newPbpList.push(constraint);
-                                    }
-                                });
-
-                                _.remove(constraints,(constraint) => {
-                                    return constraint;
-                                });
-
-                                newPbpList.forEach(pbp => {
-                                    constraints.push(pbp);
-                                });
-
-                                if(newPbpList.length == 0) {
-                                    constraints.push({
-                                        type: 'PBP',
-                                        name: "All"
-                                    })
-                                }
-                           }
-                       });
-                    });
-                };
             };
         });
     }
+
+    editRuleContracts(dataSourceType, contracts,rule){
+        
+        this.openDialogEditConstraints(dataSourceType,contracts,rule).subscribe((data) => {
+            if(data)
+            {
+                _.remove(rule.contracts,(contract) => {
+                    return contract;
+                });
+
+                data.selection.selected.forEach(selected => {
+                    rule.contracts.push(selected);
+                });
+
+                _.remove(rule.pbp,(pbp) => {
+                    return pbp;
+                });
+
+                contracts.forEach(contract => {
+                    this.ruleService.pbpList.forEach(pbp => {
+                        pbp.contracts.forEach(pbpContracts =>{
+                            if(pbpContracts.contractId == contract.contractId)
+                            rule.pbp.push(pbp);
+                        })
+                        
+                    })
+                });
+            };
+        });
+    }
+
+    editRulePBP(dataSourceType, pbp,rule){
+        this.openDialogEditConstraints(dataSourceType,pbp,rule).subscribe((data) => {
+            if(data)
+            {
+                _.remove(rule.pbp,(pbp) => {
+                    return pbp;
+                });
+
+                data.selection.selected.forEach(selected => {
+                    rule.pbp.push(selected);
+                });
+            };
+        });
+    }
+
+    editRuleTin(dataSourceType, _constraint,rule){
+        this.openDialogEditConstraints(dataSourceType,_constraint,rule).subscribe((data) => {
+            if(data)
+            {
+                _.remove(rule.tin,(tin) => {
+                    return tin;
+                });
+
+                data.selection.selected.forEach(selected => {
+                    rule.tin.push(selected);
+                });
+            };
+        });
+    }
+
+    editRuleMeasures(dataSourceType, _constraint,rule){
+        this.openDialogEditConstraints(dataSourceType,_constraint,rule).subscribe((data) => {
+            if(data)
+            {
+                _.remove(rule.measures,(measure) => {
+                    return measure;
+                });
+
+                data.selection.selected.forEach(selected => {
+                    rule.measures.push(selected);
+                });
+            };
+        });
+    }
+
+    editRuleApplications(dataSourceType, _constraint,rule){
+        this.openDialogEditConstraints(dataSourceType,_constraint,rule).subscribe((data) => {
+            if(data)
+            {
+                _.remove(rule.applications,(application) => {
+                    return application;
+                });
+
+                data.selection.selected.forEach(selected => {
+                    rule.applications.push(selected);
+                });
+            };
+        });
+    }
+
 
     openDialogEditConstraints(dataSourceType, constraint, rule): Observable<any> 
     {
