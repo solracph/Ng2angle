@@ -141,7 +141,6 @@
                                                 <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editRuleSegments('Segment',rule.segments,rule)" >
                                                     <mat-icon color="editing">edit</mat-icon>
                                                 </mat-chip>
-                                                
                                                 <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined  ? 'primary' : ''}}" selected *ngFor="let cons of rule.segments">
                                                     {{cons.description}} 
                                                     <mat-icon color="primary" *ngIf="rule.isEditing && rule.segments.length > 1" (click)="removeSegmentsConstraint(rule,cons)">cancel</mat-icon>

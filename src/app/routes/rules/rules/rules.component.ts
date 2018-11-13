@@ -165,7 +165,6 @@ export class RulesComponent implements OnInit {
     }
 
     removeRow(index,dataSource,rule) {
-        debugger
         var pbpToDelete = [];
         rule.pbp.forEach((pbp: any )=> {
             pbpToDelete.push({pbpId: pbp.pbpId})
@@ -193,7 +192,7 @@ export class RulesComponent implements OnInit {
             this.openDialogRequired("Rule Description is required!");
             return;
         }
-
+        debugger
         var newRule = {
             RuleId: null,
             Code: `R${this.appState.rulId}`,
