@@ -26,7 +26,7 @@
         </ng-container>
         
         <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef> {{headerCell}} </th>
+            <th mat-header-cell *matHeaderCellDef> {{headerCell}}  </th>
             <td mat-cell *matCellDef="let element"> {{element.description}} {{element.contracts != undefined ? '(' + element.contracts[0].description + ')': ''}}</td>
         </ng-container>
         

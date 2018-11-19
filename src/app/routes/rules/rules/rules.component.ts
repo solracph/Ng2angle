@@ -59,49 +59,73 @@ export class RulesComponent implements OnInit {
     public applicationSelection: SelectionModel<Application> = new SelectionModel<Application>(true, []);
 
     public ruleDataSource: MatTableDataSource<Rule> = new MatTableDataSource<Rule>([]);
+
+    public ruleDataIsLoaded: boolean;
+    public segmentDataIsLoaded: boolean;
+    public contractDataIsLoaded: boolean;
+    public pbpDataIsLoaded: boolean;
+    public taxIdDataIsLoaded: boolean;
+    public measureDataIsLoaded: boolean;
+    public applicationDataIsLoaded: boolean;
    
 
     ngOnInit() {
-
-        this.ruleService.getRules().subscribe((data)=>{
-            this.ruleDataSource.data = data.value;
+        this.ruleService.getRules().subscribe((data)=> {
+            this.ruleDataIsLoaded = true;
+            if(data.success){
+                this.ruleDataSource.data = data.value;
+            }
         })
 
-        this.ruleService.getApplications().subscribe((data)=>{
-            this.applicationDataSource.data = data.value; //console.log(data);
-            this.ruleService.applicationList = data.value;
+        this.ruleService.getApplications().subscribe((data)=> {
+            this.applicationDataIsLoaded = true;
+            if(data.success){
+                this.applicationDataSource.data = data.value; 
+                this.ruleService.applicationList = data.value;
+            }
         });
 
-        this.ruleService.getSegments().subscribe((data)=>{
-            this.segmentDataSource.data = data.value;
-            this.ruleService.segmentList = data.value;
+        this.ruleService.getSegments().subscribe((data)=> {
+            this.segmentDataIsLoaded = true;
+            if(data.success){
+                this.segmentDataSource.data = data.value;
+                this.ruleService.segmentList = data.value;
+            }
         });
 
-        this.ruleService.getPboList().subscribe((data)=>{
-            this.pbpDataSource.data = data.value; 
-            this.ruleService.pbpList = data.value;
+        this.ruleService.getPbpList().subscribe((data)=> {
+            this.pbpDataIsLoaded = true;
+            if(data.success){
+                this.pbpDataSource.data = data.value; 
+                this.ruleService.pbpList = data.value;
+            }
+            
         });
 
-        this.ruleService.getContracts().subscribe((data)=>{
-            this.contractDataSource.data = data.value; 
-            this.ruleService.contractList = data.value;
+        this.ruleService.getContracts().subscribe((data)=> {
+            this.contractDataIsLoaded =  true;
+            if(data.success){
+                this.contractDataSource.data = data.value; 
+                this.ruleService.contractList = data.value;
+            }
         });
 
-        this.ruleService.getTinList().subscribe((data)=>{
-            this.taxIdDataSource.data = data.value; console.log(data);
-            this.ruleService.taxIdList = data.value;
+        this.ruleService.getTinList().subscribe((data)=> {
+            this.taxIdDataIsLoaded = true;
+            if(data.success){
+                this.taxIdDataSource.data = data.value; 
+                this.ruleService.taxIdList = data.value;
+            }
         });
 
         this.ruleService.getMeasures().subscribe((data)=>{
-            this.measureDataSource.data = data.value; console.log(data);
-            this.ruleService.measureList = data.value;
+            this.measureDataIsLoaded = true;
+            if(data.success){
+                this.measureDataSource.data = data.value; 
+                this.ruleService.measureList = data.value;
+            }
         });
 
-        this.ruleList = this.appState.ruleList == undefined ? [] : this.appState.ruleList; 
-        this.ruleList.forEach(rule => {
-            this.updateRuleDataSource(rule);
-        });
-        
         this.newRuleFormGroup = this._formBuilder.group({
             descriptionCtrl:  ['',Validators.required]
         });
@@ -114,14 +138,13 @@ export class RulesComponent implements OnInit {
             this.pbpDataSource.data = [...newpbpList];
             this.pbpSelection.clear();
 
-        })
-    }
+        });
+    };
 
     filteringPbpDataSource(selection){
         var newpbpList = [];
 
         selection.forEach(contract => {
-
             this.ruleService.pbpList.forEach(pbp => {
                 pbp.contracts.forEach(con => {
                     if(con.contractId == contract.contractId){
@@ -131,15 +154,13 @@ export class RulesComponent implements OnInit {
             });
         });
 
-        if(selection.length == 0 || selection[0].name == 'All'){
+        if( selection.length == 0 ){
             newpbpList = [...this.ruleService.pbpList];
         }
 
         return [...newpbpList];
     }
 
-    onContractSelect(e){
-    }
 
     applyFilter(filterValue: string, dataSource) {
         this.materialTableHelper.applyFilter(filterValue,dataSource);
@@ -202,7 +223,6 @@ export class RulesComponent implements OnInit {
             Tin: [],
             Measures: [],
             Applications: [],
-            //isEditing: false,
             Description: this.newRuleFormGroup.value.descriptionCtrl,
         }
         
@@ -230,7 +250,6 @@ export class RulesComponent implements OnInit {
     }
 
     cloneRule(rule: any){
-
         this.openDialogRuleClone(rule).subscribe((response : any) =>{
             if(response)
             {
@@ -255,7 +274,6 @@ export class RulesComponent implements OnInit {
                 });
             }
         });
-        
     }
 
     editRule(rule: Rule){
@@ -333,45 +351,43 @@ export class RulesComponent implements OnInit {
                 
             })
         });
-        
-    }
+    };
 
     removeTinConstraint(rule: any,tin: any) {
         _.remove(rule.tin, (constraint: any)=>{
             if(constraint.tinId == tin.tinId )
             return constraint;
         });
-    }
+    };
 
     removeMeasureConstraint(rule: any,measure: any) {
         _.remove(rule.measures, (constraint: any)=>{
             if(constraint.measureId == measure.measureId )
             return constraint;
         });
-    }
+    };
 
     removeApplicationConstraint(rule: any,application: any) {
         _.remove(rule.applications, (constraint: any)=>{
             if(constraint.applicationId == application.applicationId )
             return constraint;
         });
-    }
+    };
 
     openDialogRequired(message): void {
         this.dialog.open(AlertDialogComponent, {
           width: '250px',
           data: { message: message}
         });
-    }
+    };
 
     openDialogRuleClone(rule: Rule): Observable<any> {
         const dialogRef = this.dialog.open(DialogRuleCloneComponent, {
           width: '550px',
           data: {applicationDataSource: this.applicationDataSource.data,description: rule.description, headerCell: "Application" }
         });
-    
        return dialogRef.afterClosed();
-    }
+    };
 
     editRuleSegments(dataSourceType, _constraint,rule){
         this.openDialogEditConstraints(dataSourceType,_constraint,rule).subscribe((data) => {
@@ -384,13 +400,11 @@ export class RulesComponent implements OnInit {
                 data.selection.selected.forEach(selected => {
                     rule.segments.push(selected);
                 });
-
             };
         });
-    }
+    };
 
     editRuleContracts(dataSourceType, contracts,rule){
-        
         this.openDialogEditConstraints(dataSourceType,contracts,rule).subscribe((data) => {
             if(data)
             {
@@ -417,7 +431,7 @@ export class RulesComponent implements OnInit {
                 });
             };
         });
-    }
+    };
 
     editRulePBP(dataSourceType, pbp,rule){
         this.openDialogEditConstraints(dataSourceType,pbp,rule).subscribe((data) => {
@@ -432,7 +446,7 @@ export class RulesComponent implements OnInit {
                 });
             };
         });
-    }
+    };
 
     editRuleTin(dataSourceType, _constraint,rule){
         this.openDialogEditConstraints(dataSourceType,_constraint,rule).subscribe((data) => {
@@ -447,7 +461,7 @@ export class RulesComponent implements OnInit {
                 });
             };
         });
-    }
+    };
 
     editRuleMeasures(dataSourceType, _constraint,rule){
         this.openDialogEditConstraints(dataSourceType,_constraint,rule).subscribe((data) => {
@@ -462,7 +476,7 @@ export class RulesComponent implements OnInit {
                 });
             };
         });
-    }
+    };
 
     editRuleApplications(dataSourceType, _constraint,rule){
         this.openDialogEditConstraints(dataSourceType,_constraint,rule).subscribe((data) => {
@@ -477,7 +491,7 @@ export class RulesComponent implements OnInit {
                 });
             };
         });
-    }
+    };
 
 
     openDialogEditConstraints(dataSourceType, constraint, rule): Observable<any> 
@@ -502,13 +516,13 @@ export class RulesComponent implements OnInit {
             case 'Application':
                 dataSource = this.applicationDataSource.data;
                 break;
-        }
+        };
 
         return  this.dialog.open(DialogEditConstraintsComponent, {
           width: '550px',
           data: {dataSource: dataSource, dataSourceType: dataSourceType, headerCell:dataSourceType , selection: constraint}
         }).afterClosed();;
-    }
+    };
 
     ngOnDestroy() {
         this.cancelEditRule();
@@ -518,6 +532,6 @@ export class RulesComponent implements OnInit {
             _rule.expanded = false;
         });
         
-    }
-}
+    };
+};
 

@@ -41,8 +41,8 @@ export class AdminComponent implements OnInit {
     @ViewChild('userPaginator') userPaginator: MatPaginator;
     @ViewChild('assignedRulesPaginator') assignedRulesPaginator: MatPaginator;
 
-    public ruleDataSource: MatTableDataSource<Rule> = new MatTableDataSource<Rule>([]);
-    public ruleSelection: SelectionModel<Rule> = new SelectionModel<Rule>(true, []);
+    public availableRuleDataSource: MatTableDataSource<Rule> = new MatTableDataSource<Rule>([]);
+    public availableRuleSelection: SelectionModel<Rule> = new SelectionModel<Rule>(true, []);
 
     public assignedRulesDataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
     public assignedRulesSelection: SelectionModel<any> = new SelectionModel<any>(true, []);
@@ -50,22 +50,27 @@ export class AdminComponent implements OnInit {
     public userDataSource: MatTableDataSource<User> = new MatTableDataSource<User>();
     public userSelection: SelectionModel<User> = new SelectionModel<User>(true, []);
 
+    public userDataIsLoaded: boolean;
+    public availableRuleDataIsLoaded: boolean;
+    public assignedRuleDataIsLoaded: boolean;
+
     ngOnInit() {
         
         this.adminService.getUsers().subscribe((data) => {
-            console.log('getUsers',data)
-            this.appState.userList = data.value;
-            this.userDataSource.data = data.value;
+            this.userDataIsLoaded = true;
+            if(data.success){
+                this.appState.userList = data.value;
+                this.userDataSource.data = data.value;
+            }
         });
 
         this.ruleService.getApplications().subscribe((data)=>{
-            console.log('getApplications',data)
             this.applicationList = data.value;
         });
 
         if(this.appState.ruleList == undefined || this.appState.ruleList == []){
             this.ruleService.getRules().subscribe((data)=>{
-                console.log('getRules',data)
+                this.availableRuleDataIsLoaded = true;
                 if(data.success){
                     data.value.forEach(rule => {
                         this.updateRuleDataSource(rule);
@@ -74,20 +79,19 @@ export class AdminComponent implements OnInit {
                 }
             });
         } else {
+            this.availableRuleDataIsLoaded = true;
             this.appState.ruleList.forEach(rule => {
                 this.updateRuleDataSource(rule);
             });
         }
         
-       
-
-        this.ruleDataSource.paginator = this.rulePaginator;
+        this.availableRuleDataSource.paginator = this.rulePaginator;
         this.userDataSource.paginator = this.userPaginator;
         this.assignedRulesDataSource.paginator = this.assignedRulesPaginator;
     }
 
     updateRuleDataSource(newRules: Rule){
-        this.ruleDataSource.data = [...this.ruleDataSource.data,newRules];
+        this.availableRuleDataSource.data = [...this.availableRuleDataSource.data,newRules];
     }
 
     isAllSelected(selection,dataSource) {
@@ -114,64 +118,84 @@ export class AdminComponent implements OnInit {
         this.materialTableHelper.applyFilter(filterValue,dataSource);
     }
 
-    addRulesToUsers(){
-        var usersToUpdate = [];
-        this.userSelection.selected.forEach(user => {
-           
-            this.ruleSelection.selected.forEach(rule => {
-                user.rules = _.union(user.rules,[rule]);
-
-                var userToUpdate : any = _.cloneDeep(user);
+    addRulesToUsers()
+    {
+        if(this.availableRuleSelection.selected.length > 0)
+        {
+            this.availableRuleDataIsLoaded = false;
+            var usersToUpdate = [];
+    
+            this.userSelection.selected.forEach(user => {
+    
+                user.rules = _.union(user.rules,this.availableRuleSelection.selected);
+                var tempUser : any = _.cloneDeep(user);
                 var userRulesToUpdate = [];
-                userToUpdate.rules.forEach(rule => { 
+    
+                tempUser.rules.forEach(rule => { 
                     userRulesToUpdate.push({ruleId: rule.ruleId})
                 });
-                userToUpdate.rules = userRulesToUpdate;
-                usersToUpdate.push(userToUpdate);
+                tempUser.rules = userRulesToUpdate;
+                usersToUpdate.push(tempUser);
             });
-        });
+    
+            this.adminService.updateUserRules(usersToUpdate).subscribe((data) => {
+                this.availableRuleDataIsLoaded = true;
+                if(data.success)
+                {
 
-        this.adminService.updateUserRules(usersToUpdate).subscribe((data) => {
-            console.log(data)
-        })
-        this.setUsersAvailableRules(this.userSelection);
-        this.setUserCurrentRules(this.userSelection);
-        this.ruleSelection = new SelectionModel<Rule>(true, []);
-        this.maintainAppStateUserList(this.userDataSource.data);
-    }
+                }
+                this.setUsersAvailableRules(this.userSelection);
+                this.setUserCurrentRules(this.userSelection);
+                this.availableRuleSelection = new SelectionModel<Rule>(true, []);
+                this.maintainAppStateUserList(this.userDataSource.data);
+            });
+        };
+    };
 
-    removeRUles(selection)
+    removeRUles()
     {
-        var usersToUpdate = [];
-        selection.selected.forEach(selection => {
-            if(selection != undefined) 
-            {
-                _.pullAllBy(this.assignedRulesDataSource.data,[selection],"ruleId");
-                this.assignedRulesDataSource.data = this.assignedRulesDataSource.data;
-                debugger
-                this.userSelection.selected.forEach(user => {
-                    if(user.rules != undefined) 
-                    {
-                        _.pullAllBy(user.rules,[selection],"ruleId");
-                        var userToUpdate : any = _.cloneDeep(user);
+        if(this.assignedRulesSelection.selected.length > 0)
+        {
+            this.assignedRulesSelection.selected.forEach(selection => {
+                if(selection != undefined) 
+                {
+                    this.userSelection.selected.forEach(user => {
+                        if(user.rules != undefined) 
+                        {
+                            _.pullAllBy(user.rules,[selection],"ruleId");
+                        }
+                    }); 
+                }
+            }); 
 
-                        var userRulesToUpdate = [];
-                        userToUpdate.rules.forEach(rule => { 
-                            userRulesToUpdate.push({ruleId: rule.ruleId})
-                        });
-                        userToUpdate.rules = userRulesToUpdate;
-                        usersToUpdate.push(userToUpdate);
-                    }
-                }); 
-            }
-        }); 
-        this.adminService.updateUserRules(usersToUpdate).subscribe((data) => {
-            console.log(data)
-        })
-        this.setUsersAvailableRules(this.userSelection);
-        this.assignedRulesSelection = new SelectionModel<Rule>(true, []);
-        this.maintainAppStateUserList(this.userDataSource.data);
-    }
+            var usersToUpdate = [];
+
+            this.userSelection.selected.forEach(user => {
+                if(user.rules != undefined) 
+                {
+                    var userToUpdate : any = _.cloneDeep(user);
+                    var userRulesToUpdate = [];
+                    userToUpdate.rules.forEach(rule => { 
+                        userRulesToUpdate.push({ruleId: rule.ruleId})
+                    });
+                    userToUpdate.rules = userRulesToUpdate;
+                    usersToUpdate.push(userToUpdate);
+                }
+            }); 
+
+            this.availableRuleDataIsLoaded = false;
+            this.adminService.updateUserRules(usersToUpdate).subscribe((data) => {
+                this.availableRuleDataIsLoaded = true;
+                if(data.success)
+                {
+                    this.setUsersAvailableRules(this.userSelection);
+                    this.setUserCurrentRules(this.userSelection);
+                    this.assignedRulesSelection = new SelectionModel<Rule>(true, []);
+                    this.maintainAppStateUserList(this.userDataSource.data);
+                };
+            });
+        }
+    };
 
     maintainAppStateUserList(users) {
         this.appState.userList.forEach(suser => {
@@ -194,19 +218,19 @@ export class AdminComponent implements OnInit {
                     users.selected.forEach(user => {
                         if(user.rules != undefined) 
                         {
-                            this.ruleDataSource.data = [...this.appState.ruleList];
-                            data = _.unionBy(data,_.pullAllBy(this.ruleDataSource.data,user.rules,"ruleId"),"ruleId");
+                            this.availableRuleDataSource.data = [...this.appState.ruleList];
+                            data = _.unionBy(data,_.pullAllBy(this.availableRuleDataSource.data,user.rules,"ruleId"),"ruleId");
                             data = this.filterRuleData(data);
                         }
                     }); 
-                    this.ruleDataSource.data = this.filterRuleData(data);
+                    this.availableRuleDataSource.data = this.filterRuleData(data);
                     
                 } else {
-                    this.ruleDataSource.data = [...this.filterRuleData(this.appState.ruleList)];
+                    this.availableRuleDataSource.data = [...this.filterRuleData(this.appState.ruleList)];
                 }
                 
             } else {
-                this.ruleDataSource.data = [...this.filterRuleData(this.appState.ruleList)];
+                this.availableRuleDataSource.data = [...this.filterRuleData(this.appState.ruleList)];
             }
         }
     }
@@ -242,7 +266,6 @@ export class AdminComponent implements OnInit {
     }
 
     getUsersNameToAssignedRules(userRules,ruleId,user) {
-        debugger
         if(_.find(userRules,['ruleId',ruleId]) != undefined)
             return user.userName
     }

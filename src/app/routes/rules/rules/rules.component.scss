@@ -8,6 +8,9 @@
    // display: none;
 }
 
+:host /deep/ .mat-horizontal-stepper-header{
+    //padding: 0 60px;
+}
 
 
 :host /deep/ .mat-chip.mat-standard-chip.mat-chip-selected[ng-reflect-color="primary"]{
@@ -34,6 +37,9 @@
     font-size: 20px;
 }
 
+:host /deep/ .mat-progress-spinner circle, .mat-spinner circle {
+    stroke: #2195f3;
+}
 
 :host /deep/ .mat-icon.mat-editing{
     color: #e5c735;
@@ -147,4 +153,19 @@ table, :host /deep/ .mat-paginator-container{
 
 .rule-is-editing{
     border: solid #e5c735;
+}
+
+.modal {
+    display: block; 
+    position: absolute;; 
+    z-index: 1; 
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.1); 
+}
+
+.spinner-container {
+    position: absolute; left: 50%; top: 40%;
+}
+.spinner-container div {
+    position: relative; left: -50%;
 }

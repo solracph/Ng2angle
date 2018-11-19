@@ -7,6 +7,15 @@
                     <div class="md-card-title">Users</div>
                 </div>
                 <div class="md-card-body">
+                    <div class="modal-container" *ngIf="!userDataIsLoaded">
+                        <div class="modal">
+                            <div  class="spinner-container">
+                                <div>
+                                    <mat-spinner style="float: right;" [diameter]="50"></mat-spinner>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <mat-form-field>
                         <mat-select placeholder="Filter User by Application" name="filterByApplication">
                             <mat-option (onSelectionChange)="filterUserByApplication($event)" [value]="0">
@@ -66,38 +75,45 @@
                                 <div class="md-card-heading">
                                     <div class="md-card-title">Available rule(s)</div>
                                 </div>
-                                <div class="md-card-body">
-                                   
-                                        <mat-form-field>
-                                            <mat-select placeholder="Filter Rule by Application" name="filterByApplication">
-                                                <mat-option selected (onSelectionChange)="filterRuleByApplication($event)" [value]="0">
-                                                    All
-                                                </mat-option>
-                                                <mat-option (onSelectionChange)="filterRuleByApplication($event)" *ngFor="let application of applicationList" [value]="application.applicationId">
-                                                {{application.description}}
-                                                </mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
-
+                            <div class="md-card-body">
+                                    <div class="modal-container" *ngIf="!availableRuleDataIsLoaded">
+                                        <div class="modal">
+                                            <div  class="spinner-container">
+                                                <div>
+                                                    <mat-spinner style="float: right;" [diameter]="50"></mat-spinner>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <mat-form-field>
-                                        <input matInput (keyup)="applyFilter($event.target.value,ruleDataSource)" placeholder="Filter">
+                                        <mat-select placeholder="Filter Rule by Application" name="filterByApplication">
+                                            <mat-option selected (onSelectionChange)="filterRuleByApplication($event)" [value]="0">
+                                                All
+                                            </mat-option>
+                                            <mat-option (onSelectionChange)="filterRuleByApplication($event)" *ngFor="let application of applicationList" [value]="application.applicationId">
+                                                {{application.description}}
+                                            </mat-option>
+                                        </mat-select>
                                     </mat-form-field>
-                                    <table mat-table [dataSource]="ruleDataSource" class="mat-rule-table">
+                                    <mat-form-field>
+                                        <input matInput (keyup)="applyFilter($event.target.value,availableRuleDataSource)" placeholder="Filter">
+                                    </mat-form-field>
+                                    <table mat-table [dataSource]="availableRuleDataSource" class="mat-rule-table">
                                         <ng-container matColumnDef="select">
-                                                <th mat-header-cell *matHeaderCellDef >
+                                            <th mat-header-cell *matHeaderCellDef >
                                                 <mat-checkbox 
-                                                    (change)="$event ? masterToggle(ruleSelection,ruleDataSource) : null"
-                                                    [checked]="ruleSelection.hasValue() && isAllSelected(ruleSelection,ruleDataSource)"
-                                                    [indeterminate]="ruleSelection.hasValue() && !isAllSelected(ruleSelection,ruleDataSource)">
+                                                    (change)="$event ? masterToggle(availableRuleSelection,availableRuleDataSource) : null"
+                                                    [checked]="availableRuleSelection.hasValue() && isAllSelected(availableRuleSelection,availableRuleDataSource)"
+                                                    [indeterminate]="availableRuleSelection.hasValue() && !isAllSelected(availableRuleSelection,availableRuleDataSource)">
                                                 </mat-checkbox>
-                                                </th>
-                                                <td mat-cell *matCellDef="let row">
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
                                                 <mat-checkbox 
                                                     (click)="$event.stopPropagation()"
-                                                    (change)="$event ? ruleSelection.toggle(row) : null"
-                                                    [checked]="ruleSelection.isSelected(row)">
+                                                    (change)="$event ? availableRuleSelection.toggle(row) : null"
+                                                    [checked]="availableRuleSelection.isSelected(row)">
                                                 </mat-checkbox>
-                                                </td>
+                                            </td>
                                         </ng-container>
                                         <ng-container matColumnDef="code">
                                             <th mat-header-cell *matHeaderCellDef> Rules </th>
@@ -105,30 +121,13 @@
                                                 <mat-accordion>
                                                     <mat-expansion-panel class="mat-elevation-z0">
                                                         <mat-expansion-panel-header>
-                                                        <mat-panel-title>
-                                                            {{rule.code}}
-                                                        </mat-panel-title>
-                                                        <mat-panel-description>
-                                                            {{rule.description}}
-                                                        </mat-panel-description>
+                                                            <mat-panel-title>
+                                                                {{rule.code}}
+                                                            </mat-panel-title>
+                                                            <mat-panel-description>
+                                                                {{rule.description}}
+                                                            </mat-panel-description>
                                                         </mat-expansion-panel-header>
-                                                        <!--<mat-chip-list  *ngFor="let constraint of rule.constraints">
-                                                            <div class="row">
-                                                                <div class="col-lg-2">
-                                                                    <div class="constraint-name-container">
-                                                                        <span>{{constraint[0].type}}</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-10">
-                                                                    <div>
-                                                                        <mat-chip color="primary" selected  *ngFor="let cons of constraint">
-                                                                            {{cons.name}} {{cons.contractName != undefined ? ('-') : ''}} {{cons.contractName}}
-                                                                        </mat-chip>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </mat-chip-list>-->
-
                                                         <mat-chip-list>
                                                             <div class="row">
                                                                 <div class="col-lg-2">
@@ -286,192 +285,198 @@
                             <div class="md-card-title">Assigned rule(s)</div>
                         </div>
                         <div class="md-card-body">
-                                <mat-form-field>
-                                        <input matInput (keyup)="applyFilter($event.target.value,assignedRulesDataSource)" placeholder="Filter">
-                                    </mat-form-field>
-                                    <table mat-table [dataSource]="assignedRulesDataSource" class="mat-rule-table">
-                                            <ng-container matColumnDef="select">
-                                                    <th mat-header-cell *matHeaderCellDef >
-                                                    <mat-checkbox 
-                                                        (change)="$event ? masterToggle(assignedRulesSelection,assignedRulesDataSource) : null"
-                                                        [checked]="assignedRulesSelection.hasValue() && isAllSelected(assignedRulesSelection,assignedRulesDataSource)"
-                                                        [indeterminate]="assignedRulesSelection.hasValue() && !isAllSelected(assignedRulesSelection,assignedRulesDataSource)">
-                                                    </mat-checkbox>
-                                                    </th>
-                                                    <td mat-cell *matCellDef="let row">
-                                                    <mat-checkbox 
-                                                        (click)="$event.stopPropagation()"
-                                                        (change)="$event ? assignedRulesSelection.toggle(row) : null"
-                                                        [checked]="assignedRulesSelection.isSelected(row)">
-                                                    </mat-checkbox>
-                                                    </td>
-                                            </ng-container>
-                                            <ng-container matColumnDef="code">
-                                                <th mat-header-cell *matHeaderCellDef> Rules </th>
-                                                <td mat-cell *matCellDef="let rule;let i = index">
-                                                    <mat-accordion>
-                                                        <mat-expansion-panel class="mat-elevation-z0">
-                                                            <mat-expansion-panel-header>
-                                                            <mat-panel-title>
-                                                                {{rule.code}}
-                                                            </mat-panel-title>
-                                                            <mat-panel-description>
-                                                                {{rule.description}}
-                                                            </mat-panel-description>
-                                                            </mat-expansion-panel-header>
-                                                            <mat-chip-list>
-                                                                    <div class="row">
-                                                                        <div class="col-lg-2">
-                                                                            <div class="constraint-name-container">
-                                                                                <span>Segments</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-lg-10">
-                                                                            <div>
-                                                                            <mat-chip-list>
-                                                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editRuleSegments('Segment',rule.segments,rule)" >
-                                                                                    <mat-icon color="editing">edit</mat-icon>
-                                                                                </mat-chip>
-                                                                                <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined  ? 'primary' : ''}}" selected *ngFor="let cons of rule.segments">
-                                                                                    {{cons.description}} 
-                                                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.segments.length > 1" (click)="removeSegmentsConstraint(rule,cons)">cancel</mat-icon>
-                                                                                </mat-chip>
-                                                                            </mat-chip-list>
-                                                                            </div>
-                                                                        </div>
+                            <div class="modal-container" *ngIf="!availableRuleDataIsLoaded">
+                                <div class="modal">
+                                    <div  class="spinner-container">
+                                        <div>
+                                            <mat-spinner style="float: right;" [diameter]="50"></mat-spinner>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <mat-form-field>
+                                <input matInput (keyup)="applyFilter($event.target.value,assignedRulesDataSource)" placeholder="Filter">
+                            </mat-form-field>
+                            <table mat-table [dataSource]="assignedRulesDataSource" class="mat-rule-table">
+                                    <ng-container matColumnDef="select">
+                                            <th mat-header-cell *matHeaderCellDef >
+                                            <mat-checkbox 
+                                                (change)="$event ? masterToggle(assignedRulesSelection,assignedRulesDataSource) : null"
+                                                [checked]="assignedRulesSelection.hasValue() && isAllSelected(assignedRulesSelection,assignedRulesDataSource)"
+                                                [indeterminate]="assignedRulesSelection.hasValue() && !isAllSelected(assignedRulesSelection,assignedRulesDataSource)">
+                                            </mat-checkbox>
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                            <mat-checkbox 
+                                                (click)="$event.stopPropagation()"
+                                                (change)="$event ? assignedRulesSelection.toggle(row) : null"
+                                                [checked]="assignedRulesSelection.isSelected(row)">
+                                            </mat-checkbox>
+                                            </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="code">
+                                        <th mat-header-cell *matHeaderCellDef> Rules </th>
+                                        <td mat-cell *matCellDef="let rule;let i = index">
+                                            <mat-accordion>
+                                                <mat-expansion-panel class="mat-elevation-z0">
+                                                    <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        {{rule.code}}
+                                                    </mat-panel-title>
+                                                    <mat-panel-description>
+                                                        {{rule.description}}
+                                                    </mat-panel-description>
+                                                    </mat-expansion-panel-header>
+                                                    <mat-chip-list>
+                                                            <div class="row">
+                                                                <div class="col-lg-2">
+                                                                    <div class="constraint-name-container">
+                                                                        <span>Segments</span>
                                                                     </div>
-                                                                </mat-chip-list>
-                                                                <mat-chip-list>
-                                                                    <div class="row">
-                                                                        <div class="col-lg-2">
-                                                                            <div class="constraint-name-container">
-                                                                                <span>Contracts</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-lg-10">
-                                                                            <div>
-                                                                            <mat-chip-list>
-                                                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editRuleContracts('Contract',rule.contracts,rule)" >
-                                                                                    <mat-icon color="editing">edit</mat-icon>
-                                                                                </mat-chip>
-                                                                                
-                                                                                <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined  ? 'primary' : ''}}" selected *ngFor="let cons of rule.contracts;let childIndex = index">
-                                                                                    {{cons.description}}  
-                                                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.contracts.length > 1" (click)="removeContractsConstraint(rule,cons)">cancel</mat-icon>
-                                                                                </mat-chip>
-                                                                            </mat-chip-list>
-                                                                            </div>
-                                                                        </div>
+                                                                </div>
+                                                                <div class="col-lg-10">
+                                                                    <div>
+                                                                    <mat-chip-list>
+                                                                        <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editRuleSegments('Segment',rule.segments,rule)" >
+                                                                            <mat-icon color="editing">edit</mat-icon>
+                                                                        </mat-chip>
+                                                                        <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined  ? 'primary' : ''}}" selected *ngFor="let cons of rule.segments">
+                                                                            {{cons.description}} 
+                                                                            <mat-icon color="primary" *ngIf="rule.isEditing && rule.segments.length > 1" (click)="removeSegmentsConstraint(rule,cons)">cancel</mat-icon>
+                                                                        </mat-chip>
+                                                                    </mat-chip-list>
                                                                     </div>
-                                                                </mat-chip-list>
-                                                                <mat-chip-list>
-                                                                    <div class="row">
-                                                                        <div class="col-lg-2">
-                                                                            <div class="constraint-name-container">
-                                                                                <span>PBP</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-lg-10">
-                                                                            <div>
-                                                                            <mat-chip-list>
-                                                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editRulePBP('PBP',rule.pbp,rule)" >
-                                                                                    <mat-icon color="editing">edit</mat-icon>
-                                                                                </mat-chip>
-                                                                                
-                                                                                <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined  ? 'primary' : ''}}" selected *ngFor="let cons of rule.pbp;let childIndex = index">
-                                                                                    {{cons.description}} 
-                                                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.pbp.length > 1" (click)="removePbpConstraint(rule,cons)">cancel</mat-icon>
-                                                                                </mat-chip>
-                                                                            </mat-chip-list>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </mat-chip-list>
-                                                                <mat-chip-list>
-                                                                    <div class="row">
-                                                                        <div class="col-lg-2">
-                                                                            <div class="constraint-name-container">
-                                                                                <span>TaxId</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-lg-10">
-                                                                            <div>
-                                                                            <mat-chip-list>
-                                                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editRuleTin('TaxId',rule.tin,rule)" >
-                                                                                    <mat-icon color="editing">edit</mat-icon>
-                                                                                </mat-chip>
-                                                                                
-                                                                                <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined ? 'primary' : ''}}" selected *ngFor="let cons of rule.tin;let childIndex = index">
-                                                                                    {{cons.description}}  
-                                                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.tin.length > 1" (click)="removeTinConstraint(rule,cons)">cancel</mat-icon>
-                                                                                </mat-chip>
-                                                                            </mat-chip-list>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </mat-chip-list>
-                                                                <mat-chip-list>
-                                                                    <div class="row">
-                                                                        <div class="col-lg-2">
-                                                                            <div class="constraint-name-container">
-                                                                                <span>Measures</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-lg-10">
-                                                                            <div>
-                                                                            <mat-chip-list>
-                                                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editRuleMeasures('Measure',rule.measures,rule)" >
-                                                                                    <mat-icon color="editing">edit</mat-icon>
-                                                                                </mat-chip>
-                                                                                
-                                                                                <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined ? 'primary' : ''}}" selected *ngFor="let cons of rule.measures;let childIndex = index">
-                                                                                    {{cons.description}}  
-                                                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.measures.length > 1" (click)="removeMeasureConstraint(rule,cons)">cancel</mat-icon>
-                                                                                </mat-chip>
-                                                                            </mat-chip-list>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </mat-chip-list>
-                                                                <mat-chip-list>
-                                                                    <div class="row">
-                                                                        <div class="col-lg-2">
-                                                                            <div class="constraint-name-container">
-                                                                                <span>Applications</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-lg-10">
-                                                                            <div>
-                                                                            <mat-chip-list>
-                                                                                <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editRuleApplications('Application',rule.applications,rule)" >
-                                                                                    <mat-icon color="editing">edit</mat-icon>
-                                                                                </mat-chip>
-                                                                                
-                                                                                <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined ? 'primary' : ''}}" selected *ngFor="let cons of rule.applications;let childIndex = index">
-                                                                                    {{cons.description}}  
-                                                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.applications.length > 1" (click)="removeApplicationConstraint(rule,cons)">cancel</mat-icon>
-                                                                                </mat-chip>
-                                                                            </mat-chip-list>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </mat-chip-list>
-                                                            <div *ngIf="userSelection.selected.length > 1" class="users-assigned-to-rules-container overflow-hidden" >
-                                                                <!--<div class="see-more" (click)="showAllUserList($event)">...</div>-->
-                                                                <mat-chip disabled *ngFor="let user of userSelection.selected" class="users-assigned-to-rules-content">{{getUsersNameToAssignedRules(user.rules,rule.ruleId,user)}}</mat-chip>
+                                                                </div>
                                                             </div>
-                                                        </mat-expansion-panel>
-                                                    </mat-accordion>
-                                                   
-                                                    
-                                                </td>
-                                            </ng-container>
-                                            
-                                            <tr mat-header-row *matHeaderRowDef="['select','code']"></tr>
-                                            <tr mat-row *matRowDef="let row; columns: ['select','code'];"></tr>
-                                    </table>
-                                    <mat-paginator #assignedRulesPaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
-                                    <button mat-button class="btn btn-danger mb-2" (click)="removeRUles(assignedRulesSelection)">Remove Rule(s)</button>
+                                                        </mat-chip-list>
+                                                        <mat-chip-list>
+                                                            <div class="row">
+                                                                <div class="col-lg-2">
+                                                                    <div class="constraint-name-container">
+                                                                        <span>Contracts</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-10">
+                                                                    <div>
+                                                                    <mat-chip-list>
+                                                                        <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editRuleContracts('Contract',rule.contracts,rule)" >
+                                                                            <mat-icon color="editing">edit</mat-icon>
+                                                                        </mat-chip>
+                                                                        
+                                                                        <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined  ? 'primary' : ''}}" selected *ngFor="let cons of rule.contracts;let childIndex = index">
+                                                                            {{cons.description}}  
+                                                                            <mat-icon color="primary" *ngIf="rule.isEditing && rule.contracts.length > 1" (click)="removeContractsConstraint(rule,cons)">cancel</mat-icon>
+                                                                        </mat-chip>
+                                                                    </mat-chip-list>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </mat-chip-list>
+                                                        <mat-chip-list>
+                                                            <div class="row">
+                                                                <div class="col-lg-2">
+                                                                    <div class="constraint-name-container">
+                                                                        <span>PBP</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-10">
+                                                                    <div>
+                                                                    <mat-chip-list>
+                                                                        <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editRulePBP('PBP',rule.pbp,rule)" >
+                                                                            <mat-icon color="editing">edit</mat-icon>
+                                                                        </mat-chip>
+                                                                        
+                                                                        <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined  ? 'primary' : ''}}" selected *ngFor="let cons of rule.pbp;let childIndex = index">
+                                                                            {{cons.description}} 
+                                                                            <mat-icon color="primary" *ngIf="rule.isEditing && rule.pbp.length > 1" (click)="removePbpConstraint(rule,cons)">cancel</mat-icon>
+                                                                        </mat-chip>
+                                                                    </mat-chip-list>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </mat-chip-list>
+                                                        <mat-chip-list>
+                                                            <div class="row">
+                                                                <div class="col-lg-2">
+                                                                    <div class="constraint-name-container">
+                                                                        <span>TaxId</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-10">
+                                                                    <div>
+                                                                    <mat-chip-list>
+                                                                        <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editRuleTin('TaxId',rule.tin,rule)" >
+                                                                            <mat-icon color="editing">edit</mat-icon>
+                                                                        </mat-chip>
+                                                                        
+                                                                        <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined ? 'primary' : ''}}" selected *ngFor="let cons of rule.tin;let childIndex = index">
+                                                                            {{cons.description}}  
+                                                                            <mat-icon color="primary" *ngIf="rule.isEditing && rule.tin.length > 1" (click)="removeTinConstraint(rule,cons)">cancel</mat-icon>
+                                                                        </mat-chip>
+                                                                    </mat-chip-list>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </mat-chip-list>
+                                                        <mat-chip-list>
+                                                            <div class="row">
+                                                                <div class="col-lg-2">
+                                                                    <div class="constraint-name-container">
+                                                                        <span>Measures</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-10">
+                                                                    <div>
+                                                                    <mat-chip-list>
+                                                                        <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editRuleMeasures('Measure',rule.measures,rule)" >
+                                                                            <mat-icon color="editing">edit</mat-icon>
+                                                                        </mat-chip>
+                                                                        
+                                                                        <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined ? 'primary' : ''}}" selected *ngFor="let cons of rule.measures;let childIndex = index">
+                                                                            {{cons.description}}  
+                                                                            <mat-icon color="primary" *ngIf="rule.isEditing && rule.measures.length > 1" (click)="removeMeasureConstraint(rule,cons)">cancel</mat-icon>
+                                                                        </mat-chip>
+                                                                    </mat-chip-list>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </mat-chip-list>
+                                                        <mat-chip-list>
+                                                            <div class="row">
+                                                                <div class="col-lg-2">
+                                                                    <div class="constraint-name-container">
+                                                                        <span>Applications</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-10">
+                                                                    <div>
+                                                                    <mat-chip-list>
+                                                                        <mat-chip color="editing" *ngIf="rule.isEditing"  selected (click)="editRuleApplications('Application',rule.applications,rule)" >
+                                                                            <mat-icon color="editing">edit</mat-icon>
+                                                                        </mat-chip>
+                                                                        
+                                                                        <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined ? 'primary' : ''}}" selected *ngFor="let cons of rule.applications;let childIndex = index">
+                                                                            {{cons.description}}  
+                                                                            <mat-icon color="primary" *ngIf="rule.isEditing && rule.applications.length > 1" (click)="removeApplicationConstraint(rule,cons)">cancel</mat-icon>
+                                                                        </mat-chip>
+                                                                    </mat-chip-list>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </mat-chip-list>
+                                                    <div *ngIf="userSelection.selected.length > 1" class="users-assigned-to-rules-container overflow-hidden" >
+                                                        <!--<div class="see-more" (click)="showAllUserList($event)">...</div>-->
+                                                        <mat-chip disabled *ngFor="let user of userSelection.selected" class="users-assigned-to-rules-content">{{getUsersNameToAssignedRules(user.rules,rule.ruleId,user)}}</mat-chip>
+                                                    </div>
+                                                </mat-expansion-panel>
+                                            </mat-accordion>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="['select','code']"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: ['select','code'];"></tr>
+                            </table>
+                            <mat-paginator #assignedRulesPaginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+                            <button mat-button class="btn btn-danger mb-2" (click)="removeRUles()">Remove Rule(s)</button>
                         </div>
                     </div>
                 </div>

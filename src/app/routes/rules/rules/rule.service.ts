@@ -40,7 +40,7 @@ export
         return this.get('get-segments');
     }
 
-    getPboList()
+    getPbpList()
     {
         return this.get('get-pbp-list');
     }

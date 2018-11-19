@@ -142,3 +142,22 @@ table, :host /deep/ .mat-paginator-container{
 .mat-form-field{
     margin-right: 20px;
 }
+
+.modal {
+    display: block; 
+    position: absolute;; 
+    z-index: 1; 
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.1); 
+}
+
+.spinner-container {
+    position: absolute; left: 50%; top: 40%;
+}
+.spinner-container div {
+    position: relative; left: -50%;
+}
+
+:host /deep/ .mat-progress-spinner circle, .mat-spinner circle {
+    stroke: #2195f3;
+}

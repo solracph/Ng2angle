@@ -24,13 +24,13 @@ export class MaterialTablePaginatorFilter {
     public newFilterFormGroup: FormGroup;
     public filter;
 
-
     constructor ( 
         public materialTableHelper: MaterialTableHelper,
         private _formBuilder: FormBuilder
     ) {}
 
     ngOnInit(){
+        console.log("dataSource",this.dataSource)
         if(this.selection.selected.length > 0){
             var selection = [];
             this.dataSource.data.forEach(element => {

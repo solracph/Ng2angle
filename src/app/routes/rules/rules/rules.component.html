@@ -13,8 +13,18 @@
                         <mat-icon>done</mat-icon>
                     </ng-template> 
                     <mat-step >
+                        <div class="modal-container" *ngIf="!segmentDataIsLoaded">
+                            <div class="modal">
+                                <div  class="spinner-container">
+                                    <div>
+                                        <mat-spinner style="float: right;" [diameter]="50"></mat-spinner>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <ng-template matStepLabel>Segments</ng-template>
                         <div class="row">
+                            
                             <div class="col-6">
                                 <material-table-paginator-filter [dataSource]="segmentDataSource" [selection]="segmentSelection" [pageSizeOptions]="pageSizeOptions"></material-table-paginator-filter>
                             </div>
@@ -22,6 +32,15 @@
                         <button mat-button matStepperNext>Next</button>
                     </mat-step>
                     <mat-step >
+                        <div class="modal-container" *ngIf="!contractDataIsLoaded">
+                            <div class="modal">
+                                <div  class="spinner-container">
+                                    <div>
+                                        <mat-spinner style="float: right;" [diameter]="50"></mat-spinner>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <ng-template matStepLabel>Contracts</ng-template>
                         <div class="row">
                             <div class="col-6">
@@ -33,6 +52,15 @@
                         </div>
                     </mat-step>
                     <mat-step>
+                        <div class="modal-container" *ngIf="!pbpDataIsLoaded">
+                            <div class="modal">
+                                <div  class="spinner-container">
+                                    <div>
+                                        <mat-spinner style="float: right;" [diameter]="50"></mat-spinner>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <ng-template matStepLabel>PBP</ng-template>
                         <div class="row">
                             <div class="col-6">
@@ -45,6 +73,15 @@
                         </div>
                     </mat-step>
                     <mat-step>
+                        <div class="modal-container" *ngIf="!taxIdDataIsLoaded">
+                            <div class="modal">
+                                <div  class="spinner-container">
+                                    <div>
+                                        <mat-spinner style="float: right;" [diameter]="50"></mat-spinner>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <ng-template matStepLabel>Tax ID</ng-template>
                         <div class="row">
                             <div class="col-6">
@@ -57,28 +94,46 @@
                         </div>
                     </mat-step>
                     <mat-step>
-                            <ng-template matStepLabel>Measures</ng-template>
-                            <div class="row">
-                                <div class="col-6">
-                                    <material-table-paginator-filter [dataSource]="measureDataSource" [selection]="measureSelection" [pageSizeOptions]="pageSizeOptions"></material-table-paginator-filter>
+                        <div class="modal-container" *ngIf="!measureDataIsLoaded">
+                            <div class="modal">
+                                <div  class="spinner-container">
+                                    <div>
+                                        <mat-spinner style="float: right;" [diameter]="50"></mat-spinner>
+                                    </div>
                                 </div>
                             </div>
-                            <div>
+                        </div>
+                        <ng-template matStepLabel>Measures</ng-template>
+                        <div class="row">
+                            <div class="col-6">
+                                <material-table-paginator-filter [dataSource]="measureDataSource" [selection]="measureSelection" [pageSizeOptions]="pageSizeOptions"></material-table-paginator-filter>
+                            </div>
+                        </div>
+                        <div>
                             <button mat-button matStepperPrevious>Back</button>
                             <button mat-button matStepperNext>Next</button>
-                            </div>
+                        </div>
                     </mat-step>
                     <mat-step >
-                            <ng-template matStepLabel>Applications</ng-template>
-                            <div class="row">
-                                <div class="col-6">
-                                    <material-table-paginator-filter [dataSource]="applicationDataSource" [selection]="applicationSelection" [pageSizeOptions]="pageSizeOptions"></material-table-paginator-filter>
+                        <div class="modal-container" *ngIf="!applicationDataIsLoaded">
+                            <div class="modal">
+                                <div  class="spinner-container">
+                                    <div>
+                                        <mat-spinner style="float: right;" [diameter]="50"></mat-spinner>
+                                    </div>
                                 </div>
                             </div>
-                            <div>
-                                <button mat-button matStepperPrevious>Back</button>
-                                <button mat-button matStepperNext>Next</button>
+                        </div>
+                        <ng-template matStepLabel>Applications</ng-template>
+                        <div class="row">
+                            <div class="col-6">
+                                <material-table-paginator-filter [dataSource]="applicationDataSource" [selection]="applicationSelection" [pageSizeOptions]="pageSizeOptions"></material-table-paginator-filter>
                             </div>
+                        </div>
+                        <div>
+                            <button mat-button matStepperPrevious>Back</button>
+                            <button mat-button matStepperNext>Next</button>
+                        </div>
                     </mat-step>
                     <mat-step>
                         <mat-form-field class="example-half-width">
@@ -102,7 +157,15 @@
 <!--*ngIf="ruleList.length > 0"-->
 <div class="container-lg" >
     <div class="md-card">
-       
+        <div class="modal-container" *ngIf="!ruleDataIsLoaded">
+            <div class="modal">
+                <div  class="spinner-container">
+                    <div>
+                        <mat-spinner style="float: right;" [diameter]="50"></mat-spinner>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="md-card-heading">
             <div class="md-card-title">Existing Rules</div>
         </div>
