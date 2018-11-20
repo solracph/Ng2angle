@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { RuleService } from './rules/rule.service';
 import { AlertDialogComponent } from '../../common/dialog/alert/alert-dialog.component';
+import { DialogYesNoComponent } from '../../common/dialog/yesOrNo/dialog-yes-or-no.component';
 import { MaterialTablePaginatorFilterModule } from '../../common/component/material-table/material-table-paginator-filter.module'; 
 
 const routes: Routes = [
@@ -18,8 +19,8 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         MaterialTablePaginatorFilterModule
     ],
-    declarations: [RulesComponent,DialogRuleCloneComponent,DialogEditConstraintsComponent,AlertDialogComponent],
-    entryComponents: [DialogRuleCloneComponent,DialogEditConstraintsComponent, AlertDialogComponent],
+    declarations: [RulesComponent,DialogRuleCloneComponent,DialogEditConstraintsComponent,AlertDialogComponent,DialogYesNoComponent],
+    entryComponents: [DialogRuleCloneComponent,DialogEditConstraintsComponent, AlertDialogComponent,DialogYesNoComponent],
     exports: [
         RouterModule
     ],

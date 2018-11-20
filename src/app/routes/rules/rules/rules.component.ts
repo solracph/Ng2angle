@@ -15,7 +15,7 @@ import * as _ from 'lodash';
 import { DialogRuleCloneComponent } from './dialog/dialog-rule-clone.component';
 import { DialogEditConstraintsComponent } from './dialog/dialog-edit-constraints.component';
 import { AlertDialogComponent } from '../../../common/dialog/alert/alert-dialog.component';
-
+import { DialogYesNoComponent } from '../../../common/dialog/yesOrNo/dialog-yes-or-no.component';
 
 @Component({
     selector: 'app-rules',
@@ -186,34 +186,49 @@ export class RulesComponent implements OnInit {
     }
 
     removeRow(index,dataSource,rule) {
-        var pbpToDelete = [];
-        rule.pbp.forEach((pbp: any )=> {
-            pbpToDelete.push({pbpId: pbp.pbpId})
+        this.openDialogYesOrNot("Do you want to delete this rule?").subscribe((response: any) =>{
+            if(response.result == true){
+                this.ruleDataIsLoaded = false;
+                var tempRule = _.cloneDeep(rule);
+                var pbpToDelete = [];
+        
+                tempRule.pbp.forEach((pbp: any )=> {
+                    pbpToDelete.push({pbpId: pbp.pbpId})
+                });
+                tempRule.pbp = pbpToDelete;
+        
+               this.ruleService.deleteRule(tempRule).subscribe(
+                   (data)=>{
+                        this.ruleDataIsLoaded = true;
+                        if(data.success){
+                                _.pullAt(dataSource.data,[index]);
+                                this.ruleDataSource.data = dataSource.data;
+                                this.appState.ruleList = dataSource.data;
+                        } else {
+                            this.openDialogAlert(data.errors[0].message,'350px');
+                        };
+                    },
+                    (error) =>{
+                        this.ruleDataIsLoaded = true;
+                    });
+            };
         });
-        rule.pbp = pbpToDelete;
-
-       this.ruleService.deleteRule(rule).subscribe((data)=>{
-           if(data.success){
-                _.pullAt(dataSource.data,[index]);
-                this.ruleDataSource.data = dataSource.data;
-                this.appState.ruleList = dataSource.data;
-           }
-       })
-    }
+    };
 
     updateRuleDataSource(newRules: any){
         this.ruleDataSource.data = [...this.ruleDataSource.data,newRules];
     }
 
     saveRule(){
-        this.appState.rulId++;
         this.cancelEditRule();
-
         if(this.newRuleFormGroup.value.descriptionCtrl == ""){
-            this.openDialogRequired("Rule Description is required!");
+            this.openDialogAlert("Rule Description is required!");
             return;
         }
-        debugger
+
+        this.ruleDataIsLoaded = false;
+        this.appState.rulId++;
+
         var newRule = {
             RuleId: null,
             Code: `R${this.appState.rulId}`,
@@ -226,26 +241,54 @@ export class RulesComponent implements OnInit {
             Description: this.newRuleFormGroup.value.descriptionCtrl,
         }
         
-        newRule.Segments = this.segmentSelection.selected;
-        newRule.Contracts = this.contractSelection.selected;
+        newRule.Segments = 
+            this.segmentSelection.selected.length == 0 
+            ? this.segmentDataSource.data
+            : this.segmentSelection.selected;
+
+        newRule.Contracts = 
+            this.contractSelection.selected.length == 0 
+            ? this.contractDataSource.data
+            : this.contractSelection.selected;
+
+        var pbpList = 
+            this.pbpSelection.selected.length == 0
+            ? this.pbpDataSource.data
+            : this.pbpSelection.selected;
 
         var pbpToInsert = [];
-        this.pbpSelection.selected.forEach((pbp: any )=> {
+        pbpList.forEach((pbp: any )=> {
             pbpToInsert.push({pbpId: pbp.pbpId})
         });
         newRule.Pbp = pbpToInsert;
-        newRule.Tin = this.taxIdSelection.selected;
-        newRule.Measures = this.measureSelection.selected;
-        newRule.Applications= this.applicationSelection.selected;
+
+
+        newRule.Tin = 
+            this.taxIdSelection.selected.length == 0
+            ? this.taxIdDataSource.data
+            : this.taxIdSelection.selected;
+
+        newRule.Measures = 
+            this.measureSelection.selected.length == 0
+            ? this.measureDataSource.data
+            : this.measureSelection.selected;
+
+        newRule.Applications = 
+            this.applicationSelection.selected.length == 0
+            ? this.applicationDataSource.data
+            : this.applicationSelection.selected;
         
         this.ruleService.createNewRules(newRule).subscribe((data)=>{
             if(data.success)
             {
-                this.ruleList.push(newRule);
-                this.appState.ruleList = this.ruleList;
-                this.updateRuleDataSource(newRule)
-                this.stepperAndSelectionReset();
-            }
+                this.ruleService.getRules().subscribe((data)=>{
+                    this.ruleDataIsLoaded = true;
+                    if(data.success){
+                        this.ruleDataSource.data = data.value;
+                        this.stepperAndSelectionReset();
+                    }
+                });
+            };
         });
     }
 
@@ -253,11 +296,12 @@ export class RulesComponent implements OnInit {
         this.openDialogRuleClone(rule).subscribe((response : any) =>{
             if(response)
             {
+                this.ruleDataIsLoaded = false;
                 rule.applications = response.applicationSelection.selected;
                 rule.description = response.description;
                 var pbpToInsert = [];
                 rule.pbp.forEach((pbp: any )=> {
-                    pbpToInsert.push({pbpId: pbp.pbpId})
+                    pbpToInsert.push({pbpId: pbp.pbpId});
                 });
                 rule.pbp = pbpToInsert;
 
@@ -265,16 +309,17 @@ export class RulesComponent implements OnInit {
                     if(data.success)
                     {
                         this.ruleService.getRules().subscribe((data)=>{
+                            this.ruleDataIsLoaded = true;
                             if(data.success)
                             {
                                 this.ruleDataSource.data = data.value;
-                            }
+                            };
                         });
-                    }
+                    };
                 });
-            }
+            };
         });
-    }
+    };
 
     editRule(rule: Rule){
         this.ruleDataSource.data.forEach( (_rule) => {
@@ -300,15 +345,24 @@ export class RulesComponent implements OnInit {
     }
 
     saveUpdateRule(rule){
-        var pbpToDelete = [];
-        rule.pbp.forEach((pbp: any )=> {
-            pbpToDelete.push({pbpId: pbp.pbpId, description: pbp.description})
+        this.openDialogYesOrNot("Do you want to save this changes?",'350px').subscribe((response: any) =>{
+            if(response.result == true)
+            {
+                this.ruleDataIsLoaded = false;
+                var pbpToDelete = [];
+                rule.pbp.forEach((pbp: any )=> {
+                    pbpToDelete.push({pbpId: pbp.pbpId, description: pbp.description})
+                });
+                rule.pbp = pbpToDelete;
+                this.ruleService.updateRule(rule).subscribe((data)=>{
+                    this.ruleDataIsLoaded = true;
+                    if(data.success){
+                        this.toggleEditeRule(rule);
+                    };
+                });
+            }
         });
-        rule.pbp = pbpToDelete;
-        this.ruleService.updateRule(rule).subscribe((data)=>{
-            this.toggleEditeRule(rule);
-        })
-    }
+    };
 
     togglePanelOpen(rule){
         rule.expanded = !rule.expanded;
@@ -374,12 +428,20 @@ export class RulesComponent implements OnInit {
         });
     };
 
-    openDialogRequired(message): void {
+    openDialogAlert(message, width = '250px'): void {
         this.dialog.open(AlertDialogComponent, {
-          width: '250px',
+          width: width,
           data: { message: message}
         });
     };
+
+    openDialogYesOrNot(message, width = '250px') : Observable<any>  {
+        return this.dialog.open(DialogYesNoComponent, {
+          width: width,
+          data: { message: message}
+        }).afterClosed();
+    };
+
 
     openDialogRuleClone(rule: Rule): Observable<any> {
         const dialogRef = this.dialog.open(DialogRuleCloneComponent, {

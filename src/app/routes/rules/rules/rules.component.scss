@@ -169,3 +169,7 @@ table, :host /deep/ .mat-paginator-container{
 .spinner-container div {
     position: relative; left: -50%;
 }
+
+:host /deep/  .mat-horizontal-content-container{
+    position: relative;
+}
