@@ -15,6 +15,9 @@ import { RoutesModule } from './routes/routes.module';
 
 import { MaterialTableHelper } from './common/service/material-table-helper.service'
 
+import { AlertDialogComponent } from './common/dialog/alert/alert-dialog.component';
+import { DialogYesNoComponent } from './common/dialog/yesOrNo/dialog-yes-or-no.component';
+
 
 // https://github.com/ocombe/ng2-translate/issues/218
 export function createTranslateLoader(http: HttpClient) {
@@ -23,8 +26,11 @@ export function createTranslateLoader(http: HttpClient) {
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        AlertDialogComponent,
+        DialogYesNoComponent
     ],
+    entryComponents: [AlertDialogComponent,DialogYesNoComponent],
     imports: [
         HttpClientModule,
         BrowserAnimationsModule, // required for ng2-tag-input

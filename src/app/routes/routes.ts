@@ -8,7 +8,7 @@ export const routes = [
         children: [
             { path: '', redirectTo: 'rules', pathMatch: 'full' },
             { path: 'home', loadChildren: './home/home.module#HomeModule' },
-            { path: 'rules-asigments', loadChildren: './admin/admin.module#AdminModule' },
+            { path: 'rules-asigments', loadChildren: './rules-asigments/rules-asigments.module#RulesAsigmentsModule' },
             { path: 'rules', loadChildren: './rules/rules.module#RulesModule' },
             { path: 'material', loadChildren: './material/material.module#MaterialModule' },
         ]

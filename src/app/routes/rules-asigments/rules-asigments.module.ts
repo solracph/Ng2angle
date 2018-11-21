@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { AdminComponent } from './admin/admin.component';
+import { RulesAsigmentsComponent } from './rules-asigments/rules-asigments.component';
 import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
-import { AdminService } from './admin/admin.service';
+import { RulesAsigmentsService } from './rules-asigments/rules-asigments.service';
 import { RuleService } from '../rules/rules/rule.service';
 
 const routes: Routes = [
-    { path: '', component: AdminComponent },
+    { path: '', component: RulesAsigmentsComponent },
 ];
 
 @NgModule({
@@ -14,13 +14,13 @@ const routes: Routes = [
         SharedModule,
         RouterModule.forChild(routes)
     ],
-    declarations: [AdminComponent],
+    declarations: [RulesAsigmentsComponent],
     exports: [
         RouterModule
     ],
     providers: [
-        AdminService,
+        RulesAsigmentsService,
         RuleService
     ]
 })
-export class AdminModule { }
+export class RulesAsigmentsModule { }

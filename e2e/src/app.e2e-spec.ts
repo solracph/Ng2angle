@@ -1,10 +1,10 @@
-import { Ng2anglePage } from './app.po';
+import { SCRAPage } from './app.po';
 
-describe('ng2angle App', function() {
-  let page: Ng2anglePage;
+describe('SCRA App', function() {
+  let page: SCRAPage;
 
   beforeEach(() => {
-    page = new Ng2anglePage();
+    page = new SCRAPage();
   });
 
   it('should display Angle in h1 tag', () => {

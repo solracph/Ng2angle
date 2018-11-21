@@ -6,7 +6,7 @@ import { AppConfiguration } from '../../../app.configuration';
 
 @Injectable()
 export 
-    class AdminService 
+    class RulesAsigmentsService 
     extends BaseClinicalService 
 {
     constructor (

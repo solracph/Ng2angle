@@ -1,6 +1,6 @@
 import { browser, by, element } from 'protractor';
 
-export class Ng2anglePage {
+export class SCRAPage {
     navigateTo() {
         return browser.get('/');
     }
