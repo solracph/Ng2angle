@@ -48,14 +48,14 @@
                         </ng-container>
                         <ng-container matColumnDef="userName">
                             <th mat-header-cell *matHeaderCellDef> User Name </th>
-                            <td mat-cell *matCellDef="let rule;let i = index">
-                                {{rule.userName}}
+                            <td mat-cell *matCellDef="let user;let i = index">
+                                {{user.userName}}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="applicationCode">
-                            <th mat-header-cell *matHeaderCellDef> Application Code </th>
-                            <td mat-cell *matCellDef="let rule">
-                                {{rule.applicationCode}}
+                            <th mat-header-cell *matHeaderCellDef> Application(s) Code </th>
+                            <td mat-cell *matCellDef="let user">
+                                {{getUserApplications(user)}}
                             </td>
                         </ng-container>
                     

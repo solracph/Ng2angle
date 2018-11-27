@@ -119,35 +119,32 @@ export class RulesAsigmentsComponent implements OnInit {
 
     addRulesToUsers()
     {
-        if(this.availableRuleSelection.selected.length > 0)
+        if(this.availableRuleSelection.selected.length > 0 && this.userSelection.selected.length > 0)
         {
             this.openDialogYesOrNot("Do you want to add this rule(s)?",'350px').subscribe((response: any) =>{
                 if(response.result == true)
                 {
                     this.availableRuleDataIsLoaded = false;
-                    var usersToUpdate = [];
-            
-                    this.userSelection.selected.forEach(user => {
-            
+                
+                    var tempUserSelection = _.cloneDeep(this.userSelection.selected)
+
+                    tempUserSelection.forEach(user => {
                         user.rules = _.union(user.rules,this.availableRuleSelection.selected);
-                        var tempUser : any = _.cloneDeep(user);
-                        var userRulesToUpdate = [];
-            
-                        tempUser.rules.forEach(rule => { 
-                            userRulesToUpdate.push({ruleId: rule.ruleId})
-                        });
-                        tempUser.rules = userRulesToUpdate;
-                        usersToUpdate.push(tempUser);
                     });
             
-                    this.rulesAsigmentsService.updateUserRules(usersToUpdate).subscribe((data) => {
+                    this.rulesAsigmentsService.updateUserRules(tempUserSelection).subscribe((data) => {
                         this.availableRuleDataIsLoaded = true;
                         if(data.success)
                         {
+                            this.userSelection.selected.forEach(user => {
+                                user.rules = _.union(user.rules,this.availableRuleSelection.selected);
+                            });
                             this.setUsersAvailableRules(this.userSelection);
                             this.setUserCurrentRules(this.userSelection);
                             this.availableRuleSelection = new SelectionModel<Rule>(true, []);
                             this.maintainAppStateUserList(this.userDataSource.data);
+                        } else {
+                            this.openDialogAlert(data.errors[0].message,'350px');
                         }
                     });
                 }
@@ -157,7 +154,7 @@ export class RulesAsigmentsComponent implements OnInit {
 
     removeRUles()
     {
-        if(this.assignedRulesSelection.selected.length > 0)
+        if(this.assignedRulesSelection.selected.length > 0 && this.userSelection.selected.length > 0)
         {
             this.openDialogYesOrNot("Do you want to remove this rule(s)?",'350px').subscribe((response: any) =>{
                 if(response.result == true)
@@ -174,7 +171,7 @@ export class RulesAsigmentsComponent implements OnInit {
                         };
                     }); 
         
-                    var usersToUpdate = [];
+                  /*  var usersToUpdate = [];
                     this.userSelection.selected.forEach(user => {
                         if(user.rules != undefined) 
                         {
@@ -186,10 +183,10 @@ export class RulesAsigmentsComponent implements OnInit {
                             userToUpdate.rules = userRulesToUpdate;
                             usersToUpdate.push(userToUpdate);
                         };
-                    }); 
-        
+                    }); */
+                    
                     this.availableRuleDataIsLoaded = false;
-                    this.rulesAsigmentsService.updateUserRules(usersToUpdate).subscribe((data) => {
+                    this.rulesAsigmentsService.updateUserRules(this.userSelection.selected).subscribe((data) => {
                         this.availableRuleDataIsLoaded = true;
                         if(data.success)
                         {
@@ -325,6 +322,12 @@ export class RulesAsigmentsComponent implements OnInit {
         }).afterClosed();
     };
 
-
+    getUserApplications(user){
+        var codes = new String();
+        user.applications.forEach((application,i) => {
+            codes += i == 0 ? application.code : `| ${application.code}` ;
+        });
+       return codes;
+    }
 }
 
