@@ -5,7 +5,7 @@ import { Constraint } from '../../../common/model/constraint.model';
 import { Application } from '../../../common/model/application.model';
 import { Pbp } from '../../../common/model/pbp.model';
 import { RuleService } from './rule.service';
-import { MatTableDataSource, MatStepper } from '@angular/material';
+import { MatTableDataSource, MatStepper, MatPaginator } from '@angular/material';
 import { SelectionModel} from '@angular/cdk/collections';
 import { AppState } from '../../../app.state';
 import { MaterialTableHelper } from '../../../common/service/material-table-helper.service';
@@ -33,6 +33,7 @@ export class RulesComponent implements OnInit {
     ) {}
    
     @ViewChild('stepper') stepper: MatStepper;
+    @ViewChild('rulePaginator') rulePaginator: MatPaginator; 
 
     public newRuleFormGroup: FormGroup;
     public ruleList: Array<any>;
@@ -74,6 +75,7 @@ export class RulesComponent implements OnInit {
             this.ruleDataIsLoaded = true;
             if(data.success){
                 this.ruleDataSource.data = data.value;
+                this.ruleDataSource.paginator = this.rulePaginator;
             }
         })
 

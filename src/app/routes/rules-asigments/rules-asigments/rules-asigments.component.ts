@@ -144,7 +144,7 @@ export class RulesAsigmentsComponent implements OnInit {
                             this.availableRuleSelection = new SelectionModel<Rule>(true, []);
                             this.maintainAppStateUserList(this.userDataSource.data);
                         } else {
-                            this.openDialogAlert(data.errors[0].message,'350px');
+                            this.openDialogAlert(data.errors[0].message,'550px');
                         }
                     });
                 }
