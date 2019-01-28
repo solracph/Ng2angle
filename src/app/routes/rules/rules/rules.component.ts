@@ -295,6 +295,7 @@ export class RulesComponent implements OnInit {
     }
 
     cloneRule(rule: any){
+        rule.ruleId = 0;
         this.openDialogRuleClone(rule).subscribe((response : any) =>{
             if(response)
             {
