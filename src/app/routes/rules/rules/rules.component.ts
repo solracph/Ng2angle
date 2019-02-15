@@ -148,11 +148,9 @@ export class RulesComponent implements OnInit {
 
         selection.forEach(contract => {
             this.ruleService.pbpList.forEach(pbp => {
-                pbp.contracts.forEach(con => {
-                    if(con.contractId == contract.contractId){
-                        newpbpList.push(pbp)
-                    }
-                });
+                if(pbp.contractId == contract.contractId){
+                    newpbpList.push(pbp)
+                }
             });
         });
 
@@ -222,13 +220,14 @@ export class RulesComponent implements OnInit {
     }
 
     saveRule(){
+        debugger
         this.cancelEditRule();
         if(this.newRuleFormGroup.value.descriptionCtrl == ""){
             this.openDialogAlert("Rule Description is required!");
             return;
         }
 
-        this.ruleDataIsLoaded = false;
+        
         this.appState.rulId++;
 
         var newRule = {
@@ -242,43 +241,32 @@ export class RulesComponent implements OnInit {
             Applications: [],
             Description: this.newRuleFormGroup.value.descriptionCtrl,
         }
+
+        if(this.contractSelection.selected.length == 0){
+            this.openDialogAlert("Rule Contract is required!");
+            return;
+        } else {
+            newRule.Contracts = this.contractSelection.selected;
+        }
+
+        this.ruleDataIsLoaded = false;
         
-        newRule.Segments = 
-            this.segmentSelection.selected.length == 0 
-            ? this.segmentDataSource.data
-            : this.segmentSelection.selected;
+        newRule.Segments = this.segmentSelection.selected;
 
-        newRule.Contracts = 
-            this.contractSelection.selected.length == 0 
-            ? this.contractDataSource.data
-            : this.contractSelection.selected;
-
-        var pbpList = 
-            this.pbpSelection.selected.length == 0
-            ? this.pbpDataSource.data
-            : this.pbpSelection.selected;
+        var pbpList = this.pbpSelection.selected;
 
         var pbpToInsert = [];
+        
         pbpList.forEach((pbp: any )=> {
-            pbpToInsert.push({pbpId: pbp.pbpId})
+            pbpToInsert.push({pbpId: pbp.pbpId,contractId : pbp.contractId})
         });
         newRule.Pbp = pbpToInsert;
 
+        newRule.Tin = this.taxIdSelection.selected;
 
-        newRule.Tin = 
-            this.taxIdSelection.selected.length == 0
-            ? this.taxIdDataSource.data
-            : this.taxIdSelection.selected;
+        newRule.Measures = this.measureSelection.selected;
 
-        newRule.Measures = 
-            this.measureSelection.selected.length == 0
-            ? this.measureDataSource.data
-            : this.measureSelection.selected;
-
-        newRule.Applications = 
-            this.applicationSelection.selected.length == 0
-            ? this.applicationDataSource.data
-            : this.applicationSelection.selected;
+        newRule.Applications = this.applicationSelection.selected;
         
         this.ruleService.createNewRules(newRule).subscribe((data)=>{
             if(data.success)
@@ -352,11 +340,6 @@ export class RulesComponent implements OnInit {
             if(response.result == true)
             {
                 this.ruleDataIsLoaded = false;
-                var pbpToDelete = [];
-                rule.pbp.forEach((pbp: any )=> {
-                    pbpToDelete.push({pbpId: pbp.pbpId, description: pbp.description})
-                });
-                rule.pbp = pbpToDelete;
                 this.ruleService.updateRule(rule).subscribe((data)=>{
                     this.ruleDataIsLoaded = true;
                     if(data.success){
@@ -384,7 +367,7 @@ export class RulesComponent implements OnInit {
 
     removePbpConstraint(rule: any,pbp: any) {
         _.remove(rule.pbp, (constraint: any)=>{
-            if(constraint.pbpId == pbp.pbpId )
+            if(constraint.pbpId == pbp.pbpId && constraint.contractId == pbp.contractId)
             return constraint;
         });
     }
@@ -395,7 +378,7 @@ export class RulesComponent implements OnInit {
             return constraint;
         });
 
-        _.remove(rule.pbp,(pbp) => {
+       /* _.remove(rule.pbp,(pbp) => {
             return pbp;
         });
 
@@ -407,7 +390,7 @@ export class RulesComponent implements OnInit {
                 })
                 
             })
-        });
+        });*/
     };
 
     removeTinConstraint(rule: any,tin: any) {
@@ -481,11 +464,11 @@ export class RulesComponent implements OnInit {
                     rule.contracts.push(selected);
                 });
 
-                _.remove(rule.pbp,(pbp) => {
+               /* _.remove(rule.pbp,(pbp) => {
                     return pbp;
-                });
+                });*/
 
-                contracts.forEach(contract => {
+                /*contracts.forEach(contract => {
                     this.ruleService.pbpList.forEach(pbp => {
                         pbp.contracts.forEach(pbpContracts =>{
                             if(pbpContracts.contractId == contract.contractId)
@@ -493,13 +476,13 @@ export class RulesComponent implements OnInit {
                         })
                         
                     })
-                });
+                });*/
             };
         });
     };
 
-    editRulePBP(dataSourceType, pbp,rule){
-        this.openDialogEditConstraints(dataSourceType,pbp,rule).subscribe((data) => {
+    editRulePBP(dataSourceType, pbp, rule){
+        this.openDialogEditConstraints(dataSourceType,pbp, rule).subscribe((data) => {
             if(data)
             {
                 _.remove(rule.pbp,(pbp) => {

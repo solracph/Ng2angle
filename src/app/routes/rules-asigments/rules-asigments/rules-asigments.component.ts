@@ -171,20 +171,6 @@ export class RulesAsigmentsComponent implements OnInit {
                         };
                     }); 
         
-                  /*  var usersToUpdate = [];
-                    this.userSelection.selected.forEach(user => {
-                        if(user.rules != undefined) 
-                        {
-                            var userToUpdate : any = _.cloneDeep(user);
-                            var userRulesToUpdate = [];
-                            userToUpdate.rules.forEach(rule => { 
-                                userRulesToUpdate.push({ruleId: rule.ruleId})
-                            });
-                            userToUpdate.rules = userRulesToUpdate;
-                            usersToUpdate.push(userToUpdate);
-                        };
-                    }); */
-                    
                     this.availableRuleDataIsLoaded = false;
                     this.rulesAsigmentsService.updateUserRules(this.userSelection.selected).subscribe((data) => {
                         this.availableRuleDataIsLoaded = true;

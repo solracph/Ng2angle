@@ -188,7 +188,7 @@
                                                                         </mat-chip>
                                                                         
                                                                         <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined  ? 'primary' : ''}}" selected *ngFor="let cons of rule.pbp;let childIndex = index">
-                                                                            {{cons.description}} 
+                                                                            {{cons.description}} ({{cons.contractDescription}})
                                                                             <mat-icon color="primary" *ngIf="rule.isEditing && rule.pbp.length > 1" (click)="removePbpConstraint(rule,cons)">cancel</mat-icon>
                                                                         </mat-chip>
                                                                     </mat-chip-list>
@@ -387,7 +387,7 @@
                                                                         </mat-chip>
                                                                         
                                                                         <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined  ? 'primary' : ''}}" selected *ngFor="let cons of rule.pbp;let childIndex = index">
-                                                                            {{cons.description}} 
+                                                                            {{cons.description}} ({{cons.contractDescription}})
                                                                             <mat-icon color="primary" *ngIf="rule.isEditing && rule.pbp.length > 1" (click)="removePbpConstraint(rule,cons)">cancel</mat-icon>
                                                                         </mat-chip>
                                                                     </mat-chip-list>

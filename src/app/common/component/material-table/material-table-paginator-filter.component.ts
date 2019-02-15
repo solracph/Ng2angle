@@ -30,7 +30,6 @@ export class MaterialTablePaginatorFilter {
     ) {}
 
     ngOnInit(){
-        console.log("dataSource",this.dataSource)
         if(this.selection.selected.length > 0){
             var selection = [];
             this.dataSource.data.forEach(element => {

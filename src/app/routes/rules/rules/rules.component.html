@@ -207,7 +207,7 @@
                                                 </mat-chip>
                                                 <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined  ? 'primary' : ''}}" selected *ngFor="let cons of rule.segments">
                                                     {{cons.description}} 
-                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.segments.length > 1" (click)="removeSegmentsConstraint(rule,cons)">cancel</mat-icon>
+                                                    <mat-icon color="primary" *ngIf="rule.isEditing" (click)="removeSegmentsConstraint(rule,cons)">cancel</mat-icon>
                                                 </mat-chip>
                                             </mat-chip-list>
                                             </div>
@@ -230,7 +230,7 @@
                                                 
                                                 <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined  ? 'primary' : ''}}" selected *ngFor="let cons of rule.contracts;let childIndex = index">
                                                     {{cons.description}}  
-                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.contracts.length > 1" (click)="removeContractsConstraint(rule,cons)">cancel</mat-icon>
+                                                    <mat-icon color="primary" *ngIf="rule.isEditing" (click)="removeContractsConstraint(rule,cons)">cancel</mat-icon>
                                                 </mat-chip>
                                             </mat-chip-list>
                                             </div>
@@ -252,8 +252,8 @@
                                                 </mat-chip>
                                                 
                                                 <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined  ? 'primary' : ''}}" selected *ngFor="let cons of rule.pbp;let childIndex = index">
-                                                    {{cons.description}} 
-                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.pbp.length > 1" (click)="removePbpConstraint(rule,cons)">cancel</mat-icon>
+                                                    {{cons.description}} ({{cons.contractDescription}})
+                                                    <mat-icon color="primary" *ngIf="rule.isEditing" (click)="removePbpConstraint(rule,cons)">cancel</mat-icon>
                                                 </mat-chip>
                                             </mat-chip-list>
                                             </div>
@@ -276,7 +276,7 @@
                                                 
                                                 <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined ? 'primary' : ''}}" selected *ngFor="let cons of rule.tin;let childIndex = index">
                                                     {{cons.description}}  
-                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.tin.length > 1" (click)="removeTinConstraint(rule,cons)">cancel</mat-icon>
+                                                    <mat-icon color="primary" *ngIf="rule.isEditing" (click)="removeTinConstraint(rule,cons)">cancel</mat-icon>
                                                 </mat-chip>
                                             </mat-chip-list>
                                             </div>
@@ -299,7 +299,7 @@
                                                 
                                                 <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined ? 'primary' : ''}}" selected *ngFor="let cons of rule.measures;let childIndex = index">
                                                     {{cons.description}}  
-                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.measures.length > 1" (click)="removeMeasureConstraint(rule,cons)">cancel</mat-icon>
+                                                    <mat-icon color="primary" *ngIf="rule.isEditing" (click)="removeMeasureConstraint(rule,cons)">cancel</mat-icon>
                                                 </mat-chip>
                                             </mat-chip-list>
                                             </div>
@@ -322,7 +322,7 @@
                                                 
                                                 <mat-chip color="{{rule.isEditing == false || rule.isEditing == undefined ? 'primary' : ''}}" selected *ngFor="let cons of rule.applications;let childIndex = index">
                                                     {{cons.description}}  
-                                                    <mat-icon color="primary" *ngIf="rule.isEditing && rule.applications.length > 1" (click)="removeApplicationConstraint(rule,cons)">cancel</mat-icon>
+                                                    <mat-icon color="primary" *ngIf="rule.isEditing" (click)="removeApplicationConstraint(rule,cons)">cancel</mat-icon>
                                                 </mat-chip>
                                             </mat-chip-list>
                                             </div>
