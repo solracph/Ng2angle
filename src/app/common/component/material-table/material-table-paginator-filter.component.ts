@@ -34,9 +34,23 @@ export class MaterialTablePaginatorFilter {
             var selection = [];
             this.dataSource.data.forEach(element => {
                 this.selection.selected.forEach(selected => {
-                    if(element[`${Object.getOwnPropertyNames(element)[0]}`] == selected[`${Object.getOwnPropertyNames(selected)[0]}`] || selected.name == "All"){
-                        selection.push(element)
+                    if(`${Object.getOwnPropertyNames(element)[1]}` == 'contractId')
+                    {
+                        if( 
+                            ( 
+                                element[`${Object.getOwnPropertyNames(element)[0]}`] == selected[`${Object.getOwnPropertyNames(selected)[0]}`] &&
+                                element[`${Object.getOwnPropertyNames(element)[1]}`] == selected[`${Object.getOwnPropertyNames(selected)[1]}`] 
+                            ) 
+                            || selected.name == "All"
+                        ){
+                            selection.push(element)
+                        }
+                    } else {
+                        if(element[`${Object.getOwnPropertyNames(element)[0]}`] == selected[`${Object.getOwnPropertyNames(selected)[0]}`] || selected.name == "All"){
+                            selection.push(element)
+                        }
                     }
+                   
                 })
             });
             this.selection = new SelectionModel<any>(true, selection);
