@@ -258,7 +258,7 @@ export class RulesComponent implements OnInit {
         var pbpToInsert = [];
         
         pbpList.forEach((pbp: any )=> {
-            pbpToInsert.push({pbpId: pbp.pbpId,contractId : pbp.contractId})
+            pbpToInsert.push({pbpId: pbp.pbpId,contractId : pbp.contractId,contractPbpId: pbp.contractPbpId})
         });
         newRule.Pbp = pbpToInsert;
 
