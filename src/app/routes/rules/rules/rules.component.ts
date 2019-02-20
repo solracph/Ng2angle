@@ -220,7 +220,6 @@ export class RulesComponent implements OnInit {
     }
 
     saveRule(){
-        debugger
         this.cancelEditRule();
         if(this.newRuleFormGroup.value.descriptionCtrl == ""){
             this.openDialogAlert("Rule Description is required!");
@@ -258,7 +257,7 @@ export class RulesComponent implements OnInit {
         var pbpToInsert = [];
         
         pbpList.forEach((pbp: any )=> {
-            pbpToInsert.push({pbpId: pbp.pbpId,contractId : pbp.contractId,contractPbpId: pbp.contractPbpId})
+            pbpToInsert.push({pbpId: pbp.pbpId,contractPbpId: pbp.contractPbpId})
         });
         newRule.Pbp = pbpToInsert;
 
@@ -292,7 +291,7 @@ export class RulesComponent implements OnInit {
                 rule.description = response.description;
                 var pbpToInsert = [];
                 rule.pbp.forEach((pbp: any )=> {
-                    pbpToInsert.push({pbpId: pbp.pbpId});
+                    pbpToInsert.push({pbpId: pbp.pbpId,contractPbpId: pbp.contractPbpId});
                 });
                 rule.pbp = pbpToInsert;
 

@@ -25,7 +25,6 @@ import { MaterialTableHelper } from '../../../../common/service/material-table-h
     
 
     ngOnInit(){
-        debugger
         this.headerCell = this.data.headerCell;
         this.dataSource = new MatTableDataSource<any>(this.data.dataSource);
         this.selection = new SelectionModel<any>(true, this.data.selection);
